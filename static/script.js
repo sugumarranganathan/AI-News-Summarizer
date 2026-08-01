@@ -1,5 +1,6 @@
 // ======================================================
 // AI News Summarizer
+// Version 3.1
 // script.js
 // ======================================================
 
@@ -8,32 +9,62 @@
 // ======================================================
 
 const topic = document.getElementById("topic");
+
 const searchBtn = document.getElementById("searchBtn");
+
+const refreshBtn = document.getElementById("refreshBtn");
+
+const clearBtn = document.getElementById("clearBtn");
 
 const loading = document.getElementById("loading");
 
 const news = document.getElementById("news");
+
 const summary = document.getElementById("summary");
+
 const translation = document.getElementById("translation");
 
 const image = document.getElementById("newsImage");
+
 const source = document.getElementById("source");
+
 const published = document.getElementById("published");
+
 const articleLink = document.getElementById("articleLink");
 
 // ======================================================
-// Search Button
+// Current Search State
 // ======================================================
 
-searchBtn.addEventListener("click", searchNews);
+let currentTopic = "";
+
+let currentPage = 1;
 
 // ======================================================
-// Press Enter
+// Events
 // ======================================================
+
+searchBtn.addEventListener("click", () => {
+
+    currentTopic = topic.value.trim();
+
+    currentPage = 1;
+
+    searchNews();
+
+});
+
+refreshBtn.addEventListener("click", nextNews);
+
+clearBtn.addEventListener("click", clearPage);
 
 topic.addEventListener("keypress", function (e) {
 
     if (e.key === "Enter") {
+
+        currentTopic = topic.value.trim();
+
+        currentPage = 1;
 
         searchNews();
 
@@ -47,9 +78,7 @@ topic.addEventListener("keypress", function (e) {
 
 async function searchNews() {
 
-    const query = topic.value.trim();
-
-    if (query === "") {
+    if (currentTopic === "") {
 
         alert("Please enter a news topic.");
 
@@ -59,11 +88,9 @@ async function searchNews() {
 
     loading.classList.remove("hidden");
 
-    // Loading Messages
+    news.innerHTML = `🔎 Searching News #${currentPage}...`;
 
-    news.innerHTML = "🔎 Searching latest news...";
-
-    summary.innerHTML = "🤖 AI is generating summary...";
+    summary.innerHTML = "🤖 Generating AI Summary...";
 
     translation.innerHTML = "🌍 Translating into Tamil...";
 
@@ -81,6 +108,8 @@ async function searchNews() {
 
             method: "POST",
 
+            cache: "no-store",
+
             headers: {
 
                 "Content-Type": "application/json"
@@ -89,7 +118,9 @@ async function searchNews() {
 
             body: JSON.stringify({
 
-                topic: query
+                topic: currentTopic,
+
+                page: currentPage
 
             })
 
@@ -97,19 +128,33 @@ async function searchNews() {
 
         const data = await response.json();
 
-        // ===========================================
+        if (data.error) {
+
+            throw new Error(data.error);
+
+        }
+
+        // ======================================
         // News
-        // ===========================================
+        // ======================================
 
         news.innerHTML = data.news || "No news found.";
 
+        // ======================================
+        // Summary
+        // ======================================
+
         summary.innerHTML = data.summary || "";
+
+        // ======================================
+        // Translation
+        // ======================================
 
         translation.innerHTML = data.translation || "";
 
-        // ===========================================
-        // News Image
-        // ===========================================
+        // ======================================
+        // Image
+        // ======================================
 
         if (data.image) {
 
@@ -123,37 +168,27 @@ async function searchNews() {
 
         }
 
-        // ===========================================
+        // ======================================
         // Source
-        // ===========================================
+        // ======================================
 
-        source.innerHTML = `📰 ${data.source || "Unknown Source"}`;
+        source.innerHTML = `📰 ${data.source}`;
 
-        // ===========================================
-        // Published Date & Time
-        // ===========================================
+        // ======================================
+        // Published
+        // ======================================
 
-        published.innerHTML = `
-            📅 ${data.published_date || ""}<br>
-            🕒 ${data.published_time || ""}<br>
-            🟢 Published ${data.published_ago || ""}
-        `;
+        published.innerHTML =
 
-        // ===========================================
-        // Article Link
-        // ===========================================
+        `📅 ${data.published_date}<br>
+         🕒 ${data.published_time}<br>
+         🟢 Published ${data.published_ago}`;
 
-        if (data.url) {
+        // ======================================
+        // Link
+        // ======================================
 
-            articleLink.href = data.url;
-
-        }
-
-        else {
-
-            articleLink.href = "#";
-
-        }
+        articleLink.href = data.url || "#";
 
     }
 
@@ -161,11 +196,11 @@ async function searchNews() {
 
         console.error(error);
 
-        news.innerHTML = "❌ Unable to fetch latest news.";
+        news.innerHTML = "❌ Unable to fetch news.";
 
-        summary.innerHTML = "Please try again.";
+        summary.innerHTML = "";
 
-        translation.innerHTML = "மீண்டும் முயற்சிக்கவும்.";
+        translation.innerHTML = "";
 
         image.src = "https://placehold.co/1200x500?text=Error";
 
@@ -182,6 +217,54 @@ async function searchNews() {
         loading.classList.add("hidden");
 
     }
+
+}
+
+// ======================================================
+// Next News
+// ======================================================
+
+function nextNews() {
+
+    if (currentTopic === "") {
+
+        alert("Search a topic first.");
+
+        return;
+
+    }
+
+    currentPage++;
+
+    searchNews();
+
+}
+
+// ======================================================
+// Clear
+// ======================================================
+
+function clearPage() {
+
+    currentTopic = "";
+
+    currentPage = 1;
+
+    topic.value = "";
+
+    news.innerHTML = "Latest news will appear here...";
+
+    summary.innerHTML = "AI summary will appear here...";
+
+    translation.innerHTML = "தமிழ் மொழிபெயர்ப்பு இங்கே தோன்றும்...";
+
+    image.src = "https://placehold.co/1200x500?text=AI+News";
+
+    source.innerHTML = "📰 Source";
+
+    published.innerHTML = "📅 Published Date";
+
+    articleLink.href = "#";
 
 }
 
