@@ -351,7 +351,7 @@ Example Response
 }
 
 
-----
+---
 
 # 👨‍💻 Author
 
@@ -359,3 +359,5 @@ Example Response
 
 | AI Developer | Multi-Agent AI Enthusiast
 
+
+---
