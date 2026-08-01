@@ -1,15 +1,23 @@
 """
+====================================================
 AI News Summarizer & Tamil Translator
-Main Application
+FastAPI Main Application
 
-Author: Sugumar R
+Author : Sugumar R
+====================================================
 """
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import uvicorn
+
+from agents.workflow import run_workflow
+
+# ====================================================
+# FastAPI App
+# ====================================================
 
 app = FastAPI(
     title="AI News Summarizer",
@@ -17,79 +25,97 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# -----------------------------
+# ====================================================
 # Static Files
-# -----------------------------
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# ====================================================
 
-# -----------------------------
-# HTML Templates
-# -----------------------------
-templates = Jinja2Templates(directory="templates")
+app.mount(
+    "/static",
+    StaticFiles(directory="static"),
+    name="static"
+)
 
-# -----------------------------
+# ====================================================
+# Templates
+# ====================================================
+
+templates = Jinja2Templates(
+    directory="templates"
+)
+
+# ====================================================
 # Home Page
-# -----------------------------
-@app.post("/summarize")
-async def summarize(data: dict):
+# ====================================================
 
-    topic = data["topic"]
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
 
-    # Step 1
-    latest_news = search_news(topic)
-
-    # Step 2
-    result1 = await summarizer.run(
-        task=latest_news
-    )
-
-    summary = result1.messages[-1].content
-
-    # Step 3
-    result2 = await translator.run(
-        task=summary
-    )
-
-    tamil = result2.messages[-1].content
-
-    return {
-
-        "news": latest_news,
-
-        "summary": summary,
-
-        "translation": tamil
-
-    }
-# -----------------------------
-# API Endpoint
-# -----------------------------
-@app.post("/summarize")
-async def summarize(data: dict):
-
-    topic = data.get("topic", "")
-
-    # Placeholder response
-    # AutoGen + Groq integration will be added later.
-
-    return JSONResponse(
+    return templates.TemplateResponse(
+        "index.html",
         {
-            "status": "success",
-            "topic": topic,
-            "news": "Latest news will appear here.",
-            "summary": "AI summary will appear here.",
-            "translation": "தமிழ் மொழிபெயர்ப்பு இங்கே தோன்றும்."
+            "request": request
         }
     )
 
-# -----------------------------
-# Run Server
-# -----------------------------
+# ====================================================
+# AI Workflow API
+# ====================================================
+
+@app.post("/summarize")
+async def summarize(data: dict):
+
+    topic = data.get("topic", "").strip()
+
+    if topic == "":
+
+        return {
+
+            "news": "Please enter a news topic.",
+
+            "summary": "",
+
+            "translation": "",
+
+            "image": "",
+
+            "url": "",
+
+            "source": "",
+
+            "published": ""
+
+        }
+
+    result = await run_workflow(topic)
+
+    return result
+
+# ====================================================
+# Health Check
+# ====================================================
+
+@app.get("/health")
+async def health():
+
+    return {
+
+        "status": "running",
+
+        "application": "AI News Summarizer",
+
+        "version": "1.0.0"
+
+    }
+
+# ====================================================
+# Run Application
+# ====================================================
+
 if __name__ == "__main__":
+
     uvicorn.run(
         "app:app",
         host="0.0.0.0",
         port=8000,
         reload=True
     )
-
