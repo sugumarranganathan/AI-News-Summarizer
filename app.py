@@ -7,11 +7,12 @@ Author : Sugumar R
 ====================================================
 """
 
+import uvicorn
+
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import uvicorn
 
 from agents.workflow import run_workflow
 
@@ -20,8 +21,8 @@ from agents.workflow import run_workflow
 # ====================================================
 
 app = FastAPI(
-    title="AI News Summarizer",
-    description="Multi-Agent AI News Summarizer & Tamil Translator",
+    title="AI News Summarizer & Tamil Translator",
+    description="Multi-Agent AI News Summarizer using AutoGen, Groq and GNews",
     version="1.0.0"
 )
 
@@ -29,22 +30,16 @@ app = FastAPI(
 # Static Files
 # ====================================================
 
-app.mount(
-    "/static",
-    StaticFiles(directory="static"),
-    name="static"
-)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # ====================================================
 # Templates
 # ====================================================
 
-templates = Jinja2Templates(
-    directory="templates"
-)
+templates = Jinja2Templates(directory="templates")
 
 # ====================================================
-# Home Page
+# Home
 # ====================================================
 
 @app.get("/", response_class=HTMLResponse)
@@ -58,7 +53,7 @@ async def home(request: Request):
     )
 
 # ====================================================
-# AI Workflow API
+# Summarize News
 # ====================================================
 
 @app.post("/summarize")
@@ -66,29 +61,29 @@ async def summarize(data: dict):
 
     topic = data.get("topic", "").strip()
 
-    if topic == "":
+    if not topic:
 
-        return {
+        return JSONResponse(
+            status_code=400,
+            content={
+                "error": "Please enter a news topic."
+            }
+        )
 
-            "news": "Please enter a news topic.",
+    try:
 
-            "summary": "",
+        result = await run_workflow(topic)
 
-            "translation": "",
+        return result
 
-            "image": "",
+    except Exception as e:
 
-            "url": "",
-
-            "source": "",
-
-            "published": ""
-
-        }
-
-    result = await run_workflow(topic)
-
-    return result
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": str(e)
+            }
+        )
 
 # ====================================================
 # Health Check
@@ -108,7 +103,7 @@ async def health():
     }
 
 # ====================================================
-# Run Application
+# Run Server
 # ====================================================
 
 if __name__ == "__main__":
