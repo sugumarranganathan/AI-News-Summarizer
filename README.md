@@ -11,7 +11,7 @@
 
 ---
 
-# 🚨 Problem Statement
+# Problem Statement
 
 In today's digital era, millions of news articles are published every day across different news platforms. Users often struggle to stay informed because reading complete news articles requires significant time and effort. Most traditional news applications simply display articles without helping users quickly understand the key information.
 
