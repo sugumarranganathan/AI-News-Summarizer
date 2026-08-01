@@ -349,7 +349,7 @@ Example Response
 
     "published":"2026-08-01"
 }
-```
+
 
 ---
 
@@ -364,55 +364,11 @@ Example Response
 - 🌐 Multi-language Support
 - 🔔 Daily AI News Digest
 
----
 
-# 📸 Screenshots
-
-```
-screenshots/
-
-home.png
-
-search.png
-
-summary.png
-
-translation.png
-```
-
-(Add screenshots after deployment.)
-
----
 
 # 👨‍💻 Author
 
-**Sugumar R**
+**R. Sugumar. M.B.A.,**
 
-MBA | AI Developer | Multi-Agent AI Enthusiast
+| AI Developer | Multi-Agent AI Enthusiast
 
----
-
-# ⭐ If you like this project
-
-Please consider giving it a **⭐ Star** on GitHub.
-
----
-
-# 📄 License
-
-This project is licensed under the **MIT License**.
-
----
-
-## 🌟 Highlights
-
-- ✅ FastAPI Web Application
-- ✅ AutoGen Multi-Agent Architecture
-- ✅ Groq Llama 3.3 Integration
-- ✅ GNews API Integration
-- ✅ AI News Summarization
-- ✅ Tamil Translation
-- ✅ Responsive Dashboard
-- ✅ Clean Modular Code
-- ✅ Production-Ready Structure
-- ✅ Open Source
