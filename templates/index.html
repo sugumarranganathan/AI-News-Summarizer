@@ -2,148 +2,285 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>AI News Summarizer & Tamil Translator</title>
 
-    <link rel="stylesheet" href="/static/style.css">
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <!-- ========================= -->
-        <!-- HEADER -->
-        <!-- ========================= -->
+<!-- ====================================================== -->
+<!-- NAVBAR -->
+<!-- ====================================================== -->
 
-        <header>
+<nav>
 
-            <h1>🤖 AI News Summarizer</h1>
+    <div class="logo">
 
-            <p>
-                Multi-Agent AI News Summarizer & Tamil Translator
-            </p>
-
-        </header>
-
-        <!-- ========================= -->
-        <!-- SEARCH -->
-        <!-- ========================= -->
-
-        <section class="search-section">
-
-            <input
-                type="text"
-                id="topic"
-                placeholder="Search latest news... (Example: Tesla, AI, Cricket, India)"
-            >
-
-            <button id="searchBtn">
-                🔍 Search
-            </button>
-
-        </section>
-
-        <!-- ========================= -->
-        <!-- LOADING -->
-        <!-- ========================= -->
-
-        <div id="loading" class="loading hidden">
-
-            <div class="loader"></div>
-
-            <p>Searching latest news...</p>
-
-        </div>
-
-        <!-- ========================= -->
-        <!-- NEWS CARD -->
-        <!-- ========================= -->
-
-        <div class="card">
-
-            <div class="card-header">
-
-                📰 Latest News
-
-            </div>
-
-            <div
-                class="card-body"
-                id="news"
-            >
-
-                Latest news will appear here...
-
-            </div>
-
-        </div>
-
-        <!-- ========================= -->
-        <!-- SUMMARY -->
-        <!-- ========================= -->
-
-        <div class="card">
-
-            <div class="card-header">
-
-                🤖 AI Summary
-
-            </div>
-
-            <div
-                class="card-body"
-                id="summary"
-            >
-
-                AI summary will appear here...
-
-            </div>
-
-        </div>
-
-        <!-- ========================= -->
-        <!-- TAMIL -->
-        <!-- ========================= -->
-
-        <div class="card">
-
-            <div class="card-header">
-
-                🌍 Tamil Translation
-
-            </div>
-
-            <div
-                class="card-body tamil"
-                id="translation"
-            >
-
-                தமிழ் மொழிபெயர்ப்பு இங்கே தோன்றும்...
-
-            </div>
-
-        </div>
-
-        <!-- ========================= -->
-        <!-- FOOTER -->
-        <!-- ========================= -->
-
-        <footer>
-
-            Built with ❤️ using
-            AutoGen + Groq + FastAPI
-
-        </footer>
+        🤖 AI News Assistant
 
     </div>
 
-    <script src="/static/script.js"></script>
+    <button
+        id="themeBtn"
+        class="theme-btn"
+    >
+
+        🌙
+
+    </button>
+
+</nav>
+
+<!-- ====================================================== -->
+<!-- HERO -->
+<!-- ====================================================== -->
+
+<section class="hero">
+
+    <h1>
+
+        AI News Summarizer
+
+    </h1>
+
+    <p>
+
+        Multi-Agent AI News Summarizer &
+        Tamil Translator
+
+    </p>
+
+</section>
+
+<!-- ====================================================== -->
+<!-- SEARCH -->
+<!-- ====================================================== -->
+
+<section class="search-box">
+
+    <input
+
+        type="text"
+
+        id="topic"
+
+        placeholder="Search Latest News (AI, Tesla, Cricket, India...)"
+
+    >
+
+    <button id="searchBtn">
+
+        🔍 Search
+
+    </button>
+
+</section>
+
+<!-- ====================================================== -->
+<!-- LOADING -->
+<!-- ====================================================== -->
+
+<div
+
+    id="loading"
+
+    class="loading hidden"
+
+>
+
+    <div class="loader"></div>
+
+    <p>
+
+        AI is searching latest news...
+
+    </p>
+
+</div>
+
+<!-- ====================================================== -->
+<!-- RESULT GRID -->
+<!-- ====================================================== -->
+
+<div class="grid">
+
+<!-- NEWS -->
+
+<div class="card">
+
+<div class="card-title">
+
+<span>
+
+📰 Latest News
+
+</span>
+
+<button
+
+class="copyBtn"
+
+onclick="copyText('news')"
+
+>
+
+📋
+
+</button>
+
+</div>
+
+<div
+
+id="news"
+
+class="card-body"
+
+>
+
+Latest news will appear here...
+
+</div>
+
+</div>
+
+<!-- SUMMARY -->
+
+<div class="card">
+
+<div class="card-title">
+
+<span>
+
+🤖 AI Summary
+
+</span>
+
+<button
+
+class="copyBtn"
+
+onclick="copyText('summary')"
+
+>
+
+📋
+
+</button>
+
+</div>
+
+<div
+
+id="summary"
+
+class="card-body"
+
+>
+
+AI summary will appear here...
+
+</div>
+
+</div>
+
+<!-- TAMIL -->
+
+<div class="card">
+
+<div class="card-title">
+
+<span>
+
+🌍 Tamil Translation
+
+</span>
+
+<button
+
+class="copyBtn"
+
+onclick="copyText('translation')"
+
+>
+
+📋
+
+</button>
+
+</div>
+
+<div
+
+id="translation"
+
+class="card-body tamil"
+
+>
+
+தமிழ் மொழிபெயர்ப்பு இங்கே தோன்றும்...
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ====================================================== -->
+<!-- FOOTER -->
+<!-- ====================================================== -->
+
+<footer>
+
+Made with ❤️ using
+
+<strong>
+
+AutoGen
+
+</strong>
+
++
+
+<strong>
+
+Groq
+
+</strong>
+
++
+
+<strong>
+
+FastAPI
+
+</strong>
+
+</footer>
+
+</div>
+
+<script src="/static/script.js"></script>
 
 </body>
 
