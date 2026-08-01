@@ -1,4 +1,5 @@
 """
+====================================================
 Multi-Agent Workflow
 
 News Search
@@ -6,6 +7,9 @@ News Search
 Summarizer
       ↓
 Translator
+
+Author : Sugumar R
+====================================================
 """
 
 from agents.news_search import search_news
@@ -15,77 +19,109 @@ from agents.translator import translator
 
 async def run_workflow(topic: str):
 
-    # -----------------------------
-    # Step 1 : Search News
-    # -----------------------------
+    try:
 
-    article = search_news(topic)
+        # ===========================================
+        # Step 1 : Search News
+        # ===========================================
 
-    if article is None:
+        article = search_news(topic)
+
+        if not article:
+
+            return {
+
+                "news": "No news found.",
+
+                "summary": "No summary available.",
+
+                "translation": "செய்தி கிடைக்கவில்லை.",
+
+                "image": "",
+
+                "url": "",
+
+                "source": "",
+
+                "published": ""
+
+            }
+
+        # ===========================================
+        # Build News Text
+        # ===========================================
+
+        news_text = f"""
+Title:
+{article.get('title', '')}
+
+Description:
+{article.get('description', '')}
+
+Content:
+{article.get('content', '')}
+"""
+
+        # ===========================================
+        # Step 2 : Summarizer
+        # ===========================================
+
+        summary_result = await summarizer.run(
+            task=news_text
+        )
+
+        summary = summary_result.messages[-1].content
+
+        # ===========================================
+        # Step 3 : Translator
+        # ===========================================
+
+        tamil_result = await translator.run(
+            task=summary
+        )
+
+        tamil = tamil_result.messages[-1].content
+
+        # ===========================================
+        # Final Response
+        # ===========================================
 
         return {
 
-            "news": "No news found.",
+            "news": news_text,
 
-            "summary": "No summary available.",
+            "summary": summary,
 
-            "translation": "செய்தி கிடைக்கவில்லை."
+            "translation": tamil,
+
+            "image": article.get("image", ""),
+
+            "url": article.get("url", ""),
+
+            "source": article.get("source", ""),
+
+            "published": article.get("published", "")
 
         }
 
-    # -----------------------------
-    # Format News
-    # -----------------------------
+    except Exception as e:
 
-    news_text = f"""
-Title:
-{article['title']}
+        return {
 
-Description:
-{article['description']}
+            "news": "",
 
-Content:
-{article['content']}
-"""
+            "summary": "",
 
-    # -----------------------------
-    # Step 2 : Summarize
-    # -----------------------------
+            "translation": "",
 
-    result1 = await summarizer.run(
-        task=news_text
-    )
+            "image": "",
 
-    summary = result1.messages[-1].content
+            "url": "",
 
-    # -----------------------------
-    # Step 3 : Translate
-    # -----------------------------
+            "source": "",
 
-    result2 = await translator.run(
-        task=summary
-    )
+            "published": "",
 
-    tamil = result2.messages[-1].content
+            "error": str(e)
 
-    # -----------------------------
-    # Return
-    # -----------------------------
-
-    return {
-
-        "news": news_text,
-
-        "summary": summary,
-
-        "translation": tamil,
-
-        "image": article["image"],
-
-        "url": article["url"],
-
-        "source": article["source"],
-
-        "published": article["published"]
-
-    }
+        }
