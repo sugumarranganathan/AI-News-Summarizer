@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI News Summarizer & Tamil Translator</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- ========================= -->
+        <!-- HEADER -->
+        <!-- ========================= -->
+
+        <header>
+
+            <h1>🤖 AI News Summarizer</h1>
+
+            <p>
+                Multi-Agent AI News Summarizer & Tamil Translator
+            </p>
+
+        </header>
+
+        <!-- ========================= -->
+        <!-- SEARCH -->
+        <!-- ========================= -->
+
+        <section class="search-section">
+
+            <input
+                type="text"
+                id="topic"
+                placeholder="Search latest news... (Example: Tesla, AI, Cricket, India)"
+            >
+
+            <button id="searchBtn">
+                🔍 Search
+            </button>
+
+        </section>
+
+        <!-- ========================= -->
+        <!-- LOADING -->
+        <!-- ========================= -->
+
+        <div id="loading" class="loading hidden">
+
+            <div class="loader"></div>
+
+            <p>Searching latest news...</p>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- NEWS CARD -->
+        <!-- ========================= -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                📰 Latest News
+
+            </div>
+
+            <div
+                class="card-body"
+                id="news"
+            >
+
+                Latest news will appear here...
+
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- SUMMARY -->
+        <!-- ========================= -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                🤖 AI Summary
+
+            </div>
+
+            <div
+                class="card-body"
+                id="summary"
+            >
+
+                AI summary will appear here...
+
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- TAMIL -->
+        <!-- ========================= -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                🌍 Tamil Translation
+
+            </div>
+
+            <div
+                class="card-body tamil"
+                id="translation"
+            >
+
+                தமிழ் மொழிபெயர்ப்பு இங்கே தோன்றும்...
+
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- FOOTER -->
+        <!-- ========================= -->
+
+        <footer>
+
+            Built with ❤️ using
+            AutoGen + Groq + FastAPI
+
+        </footer>
+
+    </div>
+
+    <script src="/static/script.js"></script>
+
+</body>
+
+</html>
