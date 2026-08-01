@@ -1,50 +1,67 @@
+"""
+====================================================
+GNews Search Agent
+
+Author : Sugumar R
+====================================================
+"""
+
 import os
 import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+GNEWS_API_KEY = os.getenv("GNEWS_API_KEY")
 
 
-def search_news(topic):
+def search_news(topic: str):
 
-    url = (
-        f"https://newsapi.org/v2/everything?"
-        f"q={topic}"
-        f"&language=en"
-        f"&sortBy=publishedAt"
-        f"&pageSize=1"
-        f"&apiKey={NEWS_API_KEY}"
-    )
+    try:
 
-    response = requests.get(url)
+        url = (
+            "https://gnews.io/api/v4/search"
+            f"?q={topic}"
+            "&lang=en"
+            "&country=in"
+            "&max=1"
+            f"&apikey={GNEWS_API_KEY}"
+        )
 
-    data = response.json()
+        response = requests.get(url, timeout=15)
 
-    if data["status"] != "ok":
-        return "Unable to fetch news."
+        response.raise_for_status()
 
-    articles = data.get("articles", [])
+        data = response.json()
 
-    if len(articles) == 0:
-        return "No news found."
+        articles = data.get("articles", [])
 
-    article = articles[0]
+        if not articles:
 
-    title = article.get("title", "")
+            return None
 
-    description = article.get("description", "")
+        article = articles[0]
 
-    content = article.get("content", "")
+        return {
 
-    return f"""
-Title:
-{title}
+            "title": article.get("title", ""),
 
-Description:
-{description}
+            "description": article.get("description", ""),
 
-Content:
-{content}
-"""
+            "content": article.get("content", ""),
+
+            "url": article.get("url", ""),
+
+            "image": article.get("image", ""),
+
+            "published": article.get("publishedAt", ""),
+
+            "source": article.get("source", {}).get("name", "")
+
+        }
+
+    except Exception as e:
+
+        print(f"GNews Error : {e}")
+
+        return None
