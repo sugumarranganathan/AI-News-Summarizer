@@ -19,7 +19,7 @@ The application provides a clean, responsive dashboard built with **FastAPI**, *
 
 ---
 
-# ✨ Features
+# Features
 
 - 🔍 Search any latest news topic
 - 📰 Fetch latest news from GNews API
