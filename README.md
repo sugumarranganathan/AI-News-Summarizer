@@ -52,7 +52,7 @@ The workflow operates as follows:
    - Combines their outputs into a structured response.
    - Sends the final result to the FastAPI backend.
 
-5. **🚀 FastAPI Backend**
+5. **FastAPI Backend**
    - Processes the request.
    - Returns the complete response to the web application.
 
@@ -68,7 +68,7 @@ The workflow operates as follows:
 
 ---
 
-# 🎯 Solution Benefits
+#  Solution Benefits
 
 - ✅ Automatically searches the latest news.
 - ✅ Saves users significant reading time through AI-generated summaries.
