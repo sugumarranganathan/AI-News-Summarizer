@@ -307,52 +307,6 @@ Frontend
 
 ---
 
-# 📊 API Endpoint
-
-## Home
-
-```
-GET /
-```
-
----
-
-## Summarize News
-
-```
-POST /summarize
-```
-
-Example Request
-
-```json
-{
-    "topic":"Tesla"
-}
-```
-
-Example Response
-
-```json
-{
-    "news":"...",
-
-    "summary":"...",
-
-    "translation":"...",
-
-    "image":"...",
-
-    "url":"...",
-
-    "source":"Reuters",
-
-    "published":"2026-08-01"
-}
-
-
----
-
 # 👨‍💻 Author
 
 **R. Sugumar. M.B.A.,**
