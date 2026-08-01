@@ -31,7 +31,7 @@ async def run_workflow(topic: str):
 
             return {
 
-                "news": "No news found.",
+                "news": "❌ No news found.",
 
                 "summary": "No summary available.",
 
@@ -52,11 +52,24 @@ async def run_workflow(topic: str):
             }
 
         # ===========================================
-        # Build News Text
+        # News Display (Professional Format)
         # ===========================================
 
         news_text = f"""
-📰 {article.get('title', '')}
+📰 <strong>{article.get('title', '')}</strong>
+
+<p>{article.get('description', '')}</p>
+
+<p>{article.get('content', '')}</p>
+"""
+
+        # ===========================================
+        # Text for AI Summarizer
+        # ===========================================
+
+        ai_input = f"""
+Title:
+{article.get('title', '')}
 
 Description:
 {article.get('description', '')}
@@ -66,17 +79,17 @@ Content:
 """
 
         # ===========================================
-        # Step 2 : Summarizer
+        # Step 2 : AI Summary
         # ===========================================
 
         summary_result = await summarizer.run(
-            task=news_text
+            task=ai_input
         )
 
         summary = summary_result.messages[-1].content
 
         # ===========================================
-        # Step 3 : Translator
+        # Step 3 : Tamil Translation
         # ===========================================
 
         tamil_result = await translator.run(
@@ -112,6 +125,8 @@ Content:
         }
 
     except Exception as e:
+
+        print("Workflow Error :", str(e))
 
         return {
 
