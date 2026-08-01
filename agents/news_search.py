@@ -205,6 +205,8 @@ def normalize_query(query: str):
     return query.strip()
 
 
+
+
 # ====================================================
 # Expand Search Query
 # ====================================================
@@ -212,155 +214,219 @@ def normalize_query(query: str):
 def expand_query(query: str):
 
     """
-    Generate multiple search
-    queries like Google.
+    Google-like Search Intelligence
     """
 
     query = normalize_query(query)
 
-    queries = [
-
-        query
-
-    ]
+    queries = [query]
 
     lower = query.lower()
 
-    # ----------------------------------------------
+    # =================================================
+    # Location
+    # =================================================
 
-    if lower == "tamil nadu":
+    if "tamil nadu" in lower:
 
         queries.extend([
-
             "Tamil Nadu",
-
             "Chennai",
-
             "Tamil Nadu Politics",
-
             "Tamil Nadu Government",
-
-            "Tamil Nadu Latest",
-
+            "Tamil Nadu Latest"
         ])
 
-    # ----------------------------------------------
-
-    elif lower == "india":
+    if "chennai" in lower:
 
         queries.extend([
-
-            "India Politics",
-
-            "India Economy",
-
-            "India Breaking",
-
-            "New Delhi",
-
-        ])
-
-    # ----------------------------------------------
-
-    elif lower == "chennai":
-
-        queries.extend([
-
-            "Tamil Nadu",
-
+            "Chennai",
             "Greater Chennai",
-
+            "Tamil Nadu"
         ])
 
-    # ----------------------------------------------
-
-    elif lower == "artificial intelligence":
+    if "india" in lower:
 
         queries.extend([
-
-            "Artificial Intelligence",
-
-            "Generative AI",
-
-            "OpenAI",
-
-            "Google AI",
-
+            "India",
+            "India Politics",
+            "India Economy",
+            "New Delhi"
         ])
 
-    # ----------------------------------------------
-
-    elif lower == "cricket":
+    if "world" in lower:
 
         queries.extend([
-
-            "India Cricket",
-
-            "ICC",
-
-        ])
-
-    # ----------------------------------------------
-
-    elif lower == "business":
-
-        queries.extend([
-
-            "Business",
-
-            "Stock Market",
-
-            "Economy",
-
-        ])
-
-    # ----------------------------------------------
-
-    elif lower == "sports":
-
-        queries.extend([
-
-            "Sports",
-
-            "Cricket",
-
-            "Football",
-
-            "Olympics",
-
-        ])
-
-    # ----------------------------------------------
-
-    elif lower == "technology":
-
-        queries.extend([
-
-            "Technology",
-
-            "Artificial Intelligence",
-
-            "Google",
-
-            "Microsoft",
-
-        ])
-
-    # ----------------------------------------------
-
-    elif lower == "world":
-
-        queries.extend([
-
             "World",
-
-            "International",
-
+            "International"
         ])
 
-    # ----------------------------------------------
+    # =================================================
+    # Cinema
+    # =================================================
 
-    unique_queries = []
+    if any(word in lower for word in [
+        "cinema",
+        "movie",
+        "film",
+        "kollywood",
+        "actor",
+        "actress"
+    ]):
+
+        queries.extend([
+            "Tamil Cinema",
+            "Kollywood",
+            "Tamil Movie",
+            "Cinema",
+            "Film"
+        ])
+
+    # =================================================
+    # Politics
+    # =================================================
+
+    if any(word in lower for word in [
+        "politics",
+        "government",
+        "election",
+        "cm",
+        "pm",
+        "minister"
+    ]):
+
+        queries.extend([
+            "Politics",
+            "Election",
+            "Government"
+        ])
+
+    # =================================================
+    # Cricket
+    # =================================================
+
+    if "cricket" in lower:
+
+        queries.extend([
+            "Cricket",
+            "India Cricket",
+            "ICC",
+            "IPL"
+        ])
+
+    # =================================================
+    # Sports
+    # =================================================
+
+    if "sports" in lower:
+
+        queries.extend([
+            "Sports",
+            "Cricket",
+            "Football",
+            "Tennis",
+            "Olympics"
+        ])
+
+    # =================================================
+    # Business
+    # =================================================
+
+    if any(word in lower for word in [
+        "business",
+        "economy",
+        "stock",
+        "share",
+        "market"
+    ]):
+
+        queries.extend([
+            "Business",
+            "Economy",
+            "Stock Market",
+            "Sensex",
+            "Nifty"
+        ])
+
+    # =================================================
+    # Technology
+    # =================================================
+
+    if any(word in lower for word in [
+        "technology",
+        "tech",
+        "ai",
+        "artificial intelligence"
+    ]):
+
+        queries.extend([
+            "Technology",
+            "Artificial Intelligence",
+            "OpenAI",
+            "Google AI",
+            "Microsoft AI"
+        ])
+
+    # =================================================
+    # Weather
+    # =================================================
+
+    if any(word in lower for word in [
+        "weather",
+        "rain",
+        "cyclone",
+        "storm"
+    ]):
+
+        queries.extend([
+            "Weather",
+            "Rain",
+            "Cyclone",
+            "IMD"
+        ])
+
+    # =================================================
+    # Health
+    # =================================================
+
+    if any(word in lower for word in [
+        "health",
+        "hospital",
+        "medical",
+        "covid",
+        "diabetes"
+    ]):
+
+        queries.extend([
+            "Health",
+            "Medical",
+            "Hospital"
+        ])
+
+    # =================================================
+    # Education
+    # =================================================
+
+    if any(word in lower for word in [
+        "education",
+        "school",
+        "college",
+        "university",
+        "exam"
+    ]):
+
+        queries.extend([
+            "Education",
+            "School",
+            "College",
+            "University"
+        ])
+
+    # =================================================
+    # Remove duplicates
+    # =================================================
+
+    unique = []
 
     seen = set()
 
@@ -372,24 +438,17 @@ def expand_query(query: str):
 
             continue
 
-        if item.lower() in seen:
+        key = item.lower()
+
+        if key in seen:
 
             continue
 
-        unique_queries.append(
+        seen.add(key)
 
-            item
+        unique.append(item)
 
-        )
-
-        seen.add(
-
-            item.lower()
-
-        )
-
-    return unique_queries
-
+    return unique
 # ====================================================
 # Format Date & Time
 # ====================================================
