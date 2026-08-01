@@ -1279,6 +1279,130 @@ footer p{
 
 }
 
+/* =======================================
+SEARCH BUTTONS
+======================================= */
+
+.search-box{
+
+    display:flex;
+
+    gap:15px;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+}
+
+.search-box input{
+
+    flex:1;
+
+}
+
+/* Search */
+
+.search-btn{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+/* Next News */
+
+.refresh-btn{
+
+    background:#16a34a;
+
+    color:white;
+
+}
+
+/* Clear */
+
+.clear-btn{
+
+    background:#ef4444;
+
+    color:white;
+
+}
+
+.search-btn,
+.refresh-btn,
+.clear-btn{
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:16px 24px;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+    min-width:150px;
+
+}
+
+.search-btn:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+.refresh-btn:hover{
+
+    background:#15803d;
+
+    transform:translateY(-2px);
+
+}
+
+.clear-btn:hover{
+
+    background:#dc2626;
+
+    transform:translateY(-2px);
+
+}
+
+.search-btn:active,
+.refresh-btn:active,
+.clear-btn:active{
+
+    transform:scale(.96);
+
+}
+
+@media(max-width:768px){
+
+.search-box{
+
+    flex-direction:column;
+
+}
+
+.search-btn,
+.refresh-btn,
+.clear-btn{
+
+    width:100%;
+
+}
+
+}
+
 /* ===========================================================
    END OF VERSION 3.0
 =========================================================== */
