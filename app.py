@@ -21,68 +21,128 @@ from agents.workflow import run_workflow
 # ====================================================
 
 app = FastAPI(
+
     title="AI News Summarizer & Tamil Translator",
+
     description="Multi-Agent AI News Summarizer using AutoGen, Groq and GNews",
-    version="1.0.0"
+
+    version="3.1.0"
+
 )
 
 # ====================================================
 # Static Files
 # ====================================================
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount(
+
+    "/static",
+
+    StaticFiles(directory="static"),
+
+    name="static"
+
+)
 
 # ====================================================
 # Templates
 # ====================================================
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(
+
+    directory="templates"
+
+)
 
 # ====================================================
-# Home
+# Home Page
 # ====================================================
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
 
     return templates.TemplateResponse(
+
         request=request,
+
         name="index.html",
+
         context={}
+
     )
 
-
 # ====================================================
-# Summarize News
+# AI News Workflow API
 # ====================================================
 
 @app.post("/summarize")
 async def summarize(data: dict):
 
+    # ---------------------------------------
+    # User Input
+    # ---------------------------------------
+
     topic = data.get("topic", "").strip()
 
-    if not topic:
+    page = int(data.get("page", 1))
+
+    # ---------------------------------------
+    # Validation
+    # ---------------------------------------
+
+    if topic == "":
 
         return JSONResponse(
+
             status_code=400,
+
             content={
+
                 "error": "Please enter a news topic."
+
             }
+
         )
+
+    # ---------------------------------------
+    # Run Multi-Agent Workflow
+    # ---------------------------------------
 
     try:
 
-        result = await run_workflow(topic)
+        result = await run_workflow(
 
-        return result
+            topic=topic,
+
+            page=page
+
+        )
+
+        return JSONResponse(
+
+            status_code=200,
+
+            content=result
+
+        )
 
     except Exception as e:
 
+        print("=" * 60)
+        print("APPLICATION ERROR")
+        print(str(e))
+        print("=" * 60)
+
         return JSONResponse(
+
             status_code=500,
+
             content={
+
                 "error": str(e)
+
             }
+
         )
 
 # ====================================================
@@ -98,19 +158,26 @@ async def health():
 
         "application": "AI News Summarizer",
 
-        "version": "1.0.0"
+        "version": "3.1.0",
+
+        "workflow": "News → Summarizer → Translator"
 
     }
 
 # ====================================================
-# Run Server
+# Run Application
 # ====================================================
 
 if __name__ == "__main__":
 
     uvicorn.run(
+
         "app:app",
+
         host="0.0.0.0",
+
         port=8000,
+
         reload=True
+
     )
