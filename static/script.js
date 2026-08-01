@@ -2,6 +2,7 @@
 // AI News Summarizer
 // Version 3.1
 // script.js
+// Part 1
 // ======================================================
 
 // ======================================================
@@ -14,9 +15,9 @@ const searchBtn = document.getElementById("searchBtn");
 
 const refreshBtn = document.getElementById("refreshBtn");
 
-refreshBtn.addEventListener("click", nextNews);
-
 const clearBtn = document.getElementById("clearBtn");
+
+const themeBtn = document.getElementById("themeBtn");
 
 const loading = document.getElementById("loading");
 
@@ -35,6 +36,18 @@ const published = document.getElementById("published");
 const articleLink = document.getElementById("articleLink");
 
 // ======================================================
+// Agent Status
+// ======================================================
+
+const agentStatus = document.getElementById("agentStatus");
+
+const newsAgent = document.getElementById("newsAgent");
+
+const summaryAgent = document.getElementById("summaryAgent");
+
+const translatorAgent = document.getElementById("translatorAgent");
+
+// ======================================================
 // Current Search State
 // ======================================================
 
@@ -43,7 +56,7 @@ let currentTopic = "";
 let currentPage = 1;
 
 // ======================================================
-// Events
+// Event Listeners
 // ======================================================
 
 searchBtn.addEventListener("click", () => {
@@ -74,6 +87,8 @@ topic.addEventListener("keypress", function (e) {
 
 });
 
+themeBtn.addEventListener("click", toggleTheme);
+
 // ======================================================
 // Search News
 // ======================================================
@@ -88,17 +103,37 @@ async function searchNews() {
 
     }
 
+    // ===========================================
+    // Show Loading
+    // ===========================================
+
     loading.classList.remove("hidden");
 
-    news.innerHTML = `🔎 Searching News #${currentPage}...`;
+    agentStatus.classList.remove("hidden");
 
-    summary.innerHTML = "🤖 Generating AI Summary...";
+    newsAgent.innerHTML =
+        "🔎 News Agent : Searching latest news...";
 
-    translation.innerHTML = "🌍 Translating into Tamil...";
+    summaryAgent.innerHTML =
+        "⏳ Summarizer Agent : Waiting...";
 
-    image.src = "https://placehold.co/1200x500?text=Loading...";
+    translatorAgent.innerHTML =
+        "⏳ Translator Agent : Waiting...";
 
-    source.innerHTML = "📰 Searching...";
+    news.innerHTML =
+        `🔎 Searching News #${currentPage}...`;
+
+    summary.innerHTML =
+        "🤖 AI is generating summary...";
+
+    translation.innerHTML =
+        "🌍 Translating into Tamil...";
+
+    image.src =
+        "https://placehold.co/1200x500?text=Loading...";
+
+    source.innerHTML =
+        "📰 Searching...";
 
     published.innerHTML = "";
 
@@ -136,59 +171,66 @@ async function searchNews() {
 
         }
 
-        // ======================================
+        // ===========================================
+        // Agent Status
+        // ===========================================
+
+        newsAgent.innerHTML =
+            "✅ News Agent : Completed";
+
+        summaryAgent.innerHTML =
+            "🤖 Summarizer Agent : Generating Summary...";
+
+        summary.innerHTML =
+            data.summary || "";
+
+        summaryAgent.innerHTML =
+            "✅ Summarizer Agent : Completed";
+
+        translatorAgent.innerHTML =
+            "🌍 Translator Agent : Translating...";
+
+        translation.innerHTML =
+            data.translation || "";
+
+        translatorAgent.innerHTML =
+            "✅ Translator Agent : Completed";
+
+        // ===========================================
         // News
-        // ======================================
+        // ===========================================
 
-        news.innerHTML = data.news || "No news found.";
+        news.innerHTML =
+            data.news || "No news found.";
 
-        // ======================================
-        // Summary
-        // ======================================
-
-        summary.innerHTML = data.summary || "";
-
-        // ======================================
-        // Translation
-        // ======================================
-
-        translation.innerHTML = data.translation || "";
-
-        // ======================================
+        // ===========================================
         // Image
-        // ======================================
+        // ===========================================
 
-        if (data.image) {
+        image.src = data.image
+            ? data.image
+            : "https://placehold.co/1200x500?text=No+Image";
 
-            image.src = data.image;
-
-        }
-
-        else {
-
-            image.src = "https://placehold.co/1200x500?text=No+Image";
-
-        }
-
-        // ======================================
+        // ===========================================
         // Source
-        // ======================================
+        // ===========================================
 
-        source.innerHTML = `📰 ${data.source}`;
+        source.innerHTML =
+            `📰 ${data.source || "Unknown Source"}`;
 
-        // ======================================
+        // ===========================================
         // Published
-        // ======================================
+        // ===========================================
 
         published.innerHTML =
 
-        `📅 ${data.published_date}<br>
-         🕒 ${data.published_time}<br>
-         🟢 Published ${data.published_ago}`;
+            `📅 ${data.published_date || ""}<br>
+             🕒 ${data.published_time || ""}<br>
+             🟢 Published ${data.published_ago || ""}`;
 
-        // ======================================
-        // Link
-        // ======================================
+        // ===========================================
+        // Article Link
+        // ===========================================
 
         articleLink.href = data.url || "#";
 
@@ -198,19 +240,33 @@ async function searchNews() {
 
         console.error(error);
 
-        news.innerHTML = "❌ Unable to fetch news.";
+        news.innerHTML =
+            "❌ Unable to fetch latest news.";
 
-        summary.innerHTML = "";
+        summary.innerHTML =
+            "Please try again.";
 
-        translation.innerHTML = "";
+        translation.innerHTML =
+            "மீண்டும் முயற்சிக்கவும்.";
 
-        image.src = "https://placehold.co/1200x500?text=Error";
+        image.src =
+            "https://placehold.co/1200x500?text=Error";
 
-        source.innerHTML = "📰 Error";
+        source.innerHTML =
+            "📰 Error";
 
         published.innerHTML = "";
 
         articleLink.href = "#";
+
+        newsAgent.innerHTML =
+            "❌ News Agent : Failed";
+
+        summaryAgent.innerHTML =
+            "❌ Summarizer Agent : Failed";
+
+        translatorAgent.innerHTML =
+            "❌ Translator Agent : Failed";
 
     }
 
@@ -230,7 +286,7 @@ function nextNews() {
 
     if (currentTopic === "") {
 
-        alert("Search a topic first.");
+        alert("Please search a topic first.");
 
         return;
 
@@ -254,17 +310,36 @@ function clearPage() {
 
     topic.value = "";
 
-    news.innerHTML = "Latest news will appear here...";
+    loading.classList.add("hidden");
 
-    summary.innerHTML = "AI summary will appear here...";
+    agentStatus.classList.add("hidden");
 
-    translation.innerHTML = "தமிழ் மொழிபெயர்ப்பு இங்கே தோன்றும்...";
+    newsAgent.innerHTML =
+        "⏳ News Agent : Waiting...";
 
-    image.src = "https://placehold.co/1200x500?text=AI+News";
+    summaryAgent.innerHTML =
+        "⏳ Summarizer Agent : Waiting...";
 
-    source.innerHTML = "📰 Source";
+    translatorAgent.innerHTML =
+        "⏳ Translator Agent : Waiting...";
 
-    published.innerHTML = "📅 Published Date";
+    news.innerHTML =
+        "Latest news will appear here...";
+
+    summary.innerHTML =
+        "AI summary will appear here...";
+
+    translation.innerHTML =
+        "தமிழ் மொழிபெயர்ப்பு இங்கே தோன்றும்...";
+
+    image.src =
+        "https://placehold.co/1200x500?text=AI+News";
+
+    source.innerHTML =
+        "📰 Source";
+
+    published.innerHTML =
+        "📅 Published Date";
 
     articleLink.href = "#";
 
@@ -276,21 +351,28 @@ function clearPage() {
 
 function copyText(id) {
 
-    const text = document.getElementById(id).innerText;
+    const text =
+        document.getElementById(id).innerText;
 
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text)
+        .then(() => {
 
-    alert("Copied Successfully!");
+            alert("✅ Copied Successfully!");
+
+        })
+        .catch(() => {
+
+            alert("Unable to copy text.");
+
+        });
 
 }
 
 // ======================================================
-// Dark Mode
+// Theme Toggle
 // ======================================================
 
-const themeBtn = document.getElementById("themeBtn");
-
-themeBtn.addEventListener("click", () => {
+function toggleTheme() {
 
     document.body.classList.toggle("dark");
 
@@ -306,4 +388,21 @@ themeBtn.addEventListener("click", () => {
 
     }
 
-});
+}
+
+// ======================================================
+// Initial State
+// ======================================================
+
+window.onload = function () {
+
+    loading.classList.add("hidden");
+
+    agentStatus.classList.add("hidden");
+
+    currentTopic = "";
+
+    currentPage = 1;
+
+};
+
