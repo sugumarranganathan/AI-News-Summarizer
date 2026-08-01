@@ -12,7 +12,7 @@
 
 ---
 
-### 🚀 Why Choose AI News Summarizer?
+###  Why Choose AI News Summarizer?
 
 ✅ **Latest News Search** powered by **GNews API**  
 ✅ **AI-generated Summary** using **Groq LLM**  
