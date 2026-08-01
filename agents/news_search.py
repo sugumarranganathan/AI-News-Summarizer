@@ -8,8 +8,10 @@ Author : Sugumar R
 
 import os
 import requests
-from datetime import datetime
+
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
+
 from dotenv import load_dotenv
 
 # ====================================================
@@ -49,22 +51,33 @@ def format_datetime(date_string):
 
         if diff.days > 0:
 
-            days = diff.days
-            published_ago = f"{days} day{'s' if days != 1 else ''} ago"
+            value = diff.days
+
+            unit = "day"
 
         elif diff.seconds >= 3600:
 
-            hours = diff.seconds // 3600
-            published_ago = f"{hours} hour{'s' if hours != 1 else ''} ago"
+            value = diff.seconds // 3600
+
+            unit = "hour"
 
         elif diff.seconds >= 60:
 
-            minutes = diff.seconds // 60
-            published_ago = f"{minutes} minute{'s' if minutes != 1 else ''} ago"
+            value = diff.seconds // 60
+
+            unit = "minute"
 
         else:
 
-            published_ago = "Just now"
+            return {
+
+                "date": published_date,
+
+                "time": published_time,
+
+                "ago": "Just now"
+
+            }
 
         return {
 
@@ -72,7 +85,7 @@ def format_datetime(date_string):
 
             "time": published_time,
 
-            "ago": published_ago
+            "ago": f"{value} {unit}{'' if value == 1 else 's'} ago"
 
         }
 
@@ -97,30 +110,65 @@ def search_news(topic: str, page: int = 1):
 
     if not GNEWS_API_KEY:
 
-        print("ERROR: GNEWS_API_KEY not found.")
+        print("ERROR : GNEWS_API_KEY not found.")
 
         return None
 
     try:
 
+        # ----------------------------------------
+        # Search only recent news (Last 24 Hours)
+        # ----------------------------------------
+
+        from_date = (
+
+            datetime.now(timezone.utc)
+
+            - timedelta(days=1)
+
+        ).strftime("%Y-%m-%dT%H:%M:%SZ")
+
         url = (
+
             "https://gnews.io/api/v4/search"
+
             f"?q={topic}"
+
             "&lang=en"
+
             "&country=in"
+
             "&max=1"
+
             f"&page={page}"
+
             "&sortby=publishedAt"
+
+            f"&from={from_date}"
+
             f"&apikey={GNEWS_API_KEY}"
+
         )
 
         print("=" * 70)
-        print("Searching Topic :", topic)
-        print("Page            :", page)
-        print("Request URL     :", url.replace(GNEWS_API_KEY, "********"))
+
+        print("Topic :", topic)
+
+        print("Page :", page)
+
+        print("Recent From :", from_date)
+
+        print("URL :", url.replace(GNEWS_API_KEY, "********"))
+
         print("=" * 70)
 
-        response = requests.get(url, timeout=20)
+        response = requests.get(
+
+            url,
+
+            timeout=20
+
+        )
 
         print("HTTP Status :", response.status_code)
 
@@ -130,16 +178,18 @@ def search_news(topic: str, page: int = 1):
 
         articles = data.get("articles", [])
 
-        if len(articles) == 0:
+        if not articles:
 
-            print("No articles returned.")
+            print("No recent articles found.")
 
             return None
 
         article = articles[0]
 
         published = format_datetime(
+
             article.get("publishedAt", "")
+
         )
 
         result = {
@@ -152,9 +202,10 @@ def search_news(topic: str, page: int = 1):
 
             "url": article.get("url", ""),
 
-            "image": article.get("image", ""),
+            "image": article.get("image")
+                     or "https://placehold.co/1200x500?text=No+Image",
 
-            "source": article.get("source", {}).get("name", ""),
+            "source": article.get("source", {}).get("name", "Unknown"),
 
             "published_date": published["date"],
 
@@ -165,12 +216,19 @@ def search_news(topic: str, page: int = 1):
         }
 
         print("=" * 70)
-        print("News Found Successfully")
+
+        print("Latest News Found")
+
         print("Title :", result["title"])
+
         print("Source :", result["source"])
-        print("Published :", result["published_date"])
+
+        print("Date :", result["published_date"])
+
         print("Time :", result["published_time"])
+
         print("Ago :", result["published_ago"])
+
         print("=" * 70)
 
         return result
