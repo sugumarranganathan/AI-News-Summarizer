@@ -30,15 +30,37 @@ templates = Jinja2Templates(directory="templates")
 # -----------------------------
 # Home Page
 # -----------------------------
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request
-        }
+@app.post("/summarize")
+async def summarize(data: dict):
+
+    topic = data["topic"]
+
+    # Step 1
+    latest_news = search_news(topic)
+
+    # Step 2
+    result1 = await summarizer.run(
+        task=latest_news
     )
 
+    summary = result1.messages[-1].content
+
+    # Step 3
+    result2 = await translator.run(
+        task=summary
+    )
+
+    tamil = result2.messages[-1].content
+
+    return {
+
+        "news": latest_news,
+
+        "summary": summary,
+
+        "translation": tamil
+
+    }
 # -----------------------------
 # API Endpoint
 # -----------------------------
