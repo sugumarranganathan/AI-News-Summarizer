@@ -1018,3 +1018,217 @@ def search_articles(
 
     return articles
 
+# ====================================================
+# Search News
+# ====================================================
+
+def search_news(
+    topic: str,
+    page: int = 1
+):
+
+    """
+    Return the best matching news article.
+    """
+
+    articles = search_articles(
+
+        topic,
+
+        page
+
+    )
+
+    if not articles:
+
+        print("=" * 70)
+
+        print("No news found.")
+
+        print("=" * 70)
+
+        return None
+
+    article = articles[0]
+
+    published = format_datetime(
+
+        article.get(
+
+            "publishedAt",
+
+            ""
+
+        )
+
+    )
+
+    result = {
+
+        "title": article.get(
+
+            "title",
+
+            ""
+
+        ),
+
+        "description": article.get(
+
+            "description",
+
+            ""
+
+        ),
+
+        "content": article.get(
+
+            "content",
+
+            ""
+
+        ),
+
+        "url": article.get(
+
+            "url",
+
+            ""
+
+        ),
+
+        "image": (
+
+            article.get(
+
+                "image"
+
+            )
+
+            or
+
+            "https://placehold.co/1200x500?text=No+Image"
+
+        ),
+
+        "source": article.get(
+
+            "source",
+
+            {}
+
+        ).get(
+
+            "name",
+
+            "Unknown"
+
+        ),
+
+        "published_date": published["date"],
+
+        "published_time": published["time"],
+
+        "published_ago": published["ago"],
+
+        "score": article.get(
+
+            "score",
+
+            0
+
+        )
+
+    }
+
+    print("=" * 70)
+
+    print("Best Matching Article")
+
+    print("=" * 70)
+
+    print("Title :", result["title"])
+
+    print("Source :", result["source"])
+
+    print("Score :", result["score"])
+
+    print("Published :", result["published_ago"])
+
+    print("=" * 70)
+
+    return result
+
+
+# ====================================================
+# Test
+# ====================================================
+
+if __name__ == "__main__":
+
+    while True:
+
+        print()
+
+        topic = input(
+
+            "Search News : "
+
+        ).strip()
+
+        if topic.lower() == "exit":
+
+            break
+
+        news = search_news(
+
+            topic
+
+        )
+
+        print()
+
+        if news:
+
+            print("-" * 70)
+
+            print("TITLE")
+
+            print(news["title"])
+
+            print()
+
+            print("SOURCE")
+
+            print(news["source"])
+
+            print()
+
+            print("DATE")
+
+            print(news["published_date"])
+
+            print(news["published_time"])
+
+            print(news["published_ago"])
+
+            print()
+
+            print("DESCRIPTION")
+
+            print(news["description"])
+
+            print()
+
+            print("URL")
+
+            print(news["url"])
+
+            print("-" * 70)
+
+        else:
+
+            print("No news found.")
+
+
+
