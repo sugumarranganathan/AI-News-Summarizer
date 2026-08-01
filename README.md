@@ -1,4 +1,4 @@
-# 🤖 AI News Summarizer & Tamil Translator
+# AI News Summarizer & Tamil Translator
 
 > **Multi-Agent AI News Summarizer & Tamil Translator using AutoGen, Groq, FastAPI, GNews API, HTML, CSS, and JavaScript.**
 
@@ -219,54 +219,7 @@ AI-News-Summarizer/
 ├── requirements.txt
 ├── .env
 ├── README.md
-└── LICENSE
-```
 
----
-
-# 🚀 Installation
-
-## Clone Repository
-
-```bash
-git clone https://github.com/yourusername/AI-News-Summarizer.git
-
-cd AI-News-Summarizer
-```
-
----
-
-## Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## Create .env
-
-```env
-GROQ_API_KEY=YOUR_GROQ_API_KEY
-
-GNEWS_API_KEY=YOUR_GNEWS_API_KEY
-```
-
----
-
-## Run Application
-
-```bash
-uvicorn app:app --reload
-```
-
-Open
-
-```
-http://127.0.0.1:8000
-```
-
----
 
 # 📷 User Interface
 
