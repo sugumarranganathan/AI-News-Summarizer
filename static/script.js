@@ -14,6 +14,8 @@ const searchBtn = document.getElementById("searchBtn");
 
 const refreshBtn = document.getElementById("refreshBtn");
 
+refreshBtn.addEventListener("click", nextNews);
+
 const clearBtn = document.getElementById("clearBtn");
 
 const loading = document.getElementById("loading");
