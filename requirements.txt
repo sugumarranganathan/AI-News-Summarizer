@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+jinja2
+python-dotenv
+requests
+
+autogen-agentchat
+autogen-ext[openai]
+
+groq
+
+nest_asyncio
