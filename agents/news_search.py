@@ -8,6 +8,8 @@ Author : Sugumar R
 
 import os
 import requests
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
 
 # ====================================================
@@ -20,14 +22,80 @@ GNEWS_API_KEY = os.getenv("GNEWS_API_KEY")
 
 
 # ====================================================
+# Format Date & Time
+# ====================================================
+
+def format_datetime(date_string):
+
+    try:
+
+        utc = datetime.fromisoformat(
+            date_string.replace("Z", "+00:00")
+        )
+
+        ist = utc.astimezone(
+            ZoneInfo("Asia/Kolkata")
+        )
+
+        published_date = ist.strftime("%d %b %Y")
+
+        published_time = ist.strftime("%I:%M %p IST")
+
+        now = datetime.now(
+            ZoneInfo("Asia/Kolkata")
+        )
+
+        diff = now - ist
+
+        if diff.days > 0:
+
+            published_ago = f"{diff.days} day(s) ago"
+
+        elif diff.seconds >= 3600:
+
+            published_ago = f"{diff.seconds // 3600} hour(s) ago"
+
+        elif diff.seconds >= 60:
+
+            published_ago = f"{diff.seconds // 60} minute(s) ago"
+
+        else:
+
+            published_ago = "Just now"
+
+        return {
+
+            "date": published_date,
+
+            "time": published_time,
+
+            "ago": published_ago
+
+        }
+
+    except Exception:
+
+        return {
+
+            "date": "",
+
+            "time": "",
+
+            "ago": ""
+
+        }
+
+
+# ====================================================
 # Search Latest News
 # ====================================================
 
 def search_news(topic: str):
 
-    # Check API Key
     if not GNEWS_API_KEY:
+
         print("ERROR: GNEWS_API_KEY not found.")
+
         return None
 
     try:
@@ -54,8 +122,6 @@ def search_news(topic: str):
 
         data = response.json()
 
-        print("API Response :", data)
-
         articles = data.get("articles", [])
 
         if not articles:
@@ -65,6 +131,14 @@ def search_news(topic: str):
             return None
 
         article = articles[0]
+
+        # ===========================================
+        # Format Published Date & Time
+        # ===========================================
+
+        published = format_datetime(
+            article.get("publishedAt", "")
+        )
 
         result = {
 
@@ -78,15 +152,22 @@ def search_news(topic: str):
 
             "image": article.get("image", ""),
 
-            "published": article.get("publishedAt", ""),
+            "source": article.get("source", {}).get("name", ""),
 
-            "source": article.get("source", {}).get("name", "")
+            "published_date": published["date"],
+
+            "published_time": published["time"],
+
+            "published_ago": published["ago"]
 
         }
 
         print("=" * 60)
         print("News Found Successfully")
         print("Title :", result["title"])
+        print("Published :", result["published_date"])
+        print("Time :", result["published_time"])
+        print("Ago :", result["published_ago"])
         print("=" * 60)
 
         return result
@@ -96,8 +177,8 @@ def search_news(topic: str):
         print("HTTP Error :", e)
 
         try:
-            print("Response :", response.text)
-        except:
+            print(response.text)
+        except Exception:
             pass
 
         return None
