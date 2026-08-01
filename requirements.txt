@@ -1,12 +1,36 @@
-fastapi
-uvicorn
-jinja2
-python-dotenv
-requests
+# =====================================================
+# AI News Summarizer & Tamil Translator
+# Requirements
+# =====================================================
 
-autogen-agentchat
-autogen-ext[openai]
+# FastAPI Backend
+fastapi>=0.116.0
+uvicorn[standard]>=0.35.0
 
-groq
+# HTML Templates
+jinja2>=3.1.6
 
-nest_asyncio
+# Environment Variables
+python-dotenv>=1.1.1
+
+# HTTP Requests
+requests>=2.32.4
+
+# AutoGen
+autogen-agentchat>=0.7.5
+autogen-ext[openai]>=0.7.5
+
+# Groq
+groq>=0.31.0
+
+# OpenAI SDK (Required by AutoGen OpenAI-compatible client)
+openai>=1.99.0
+
+# Async Support
+nest_asyncio>=1.6.0
+
+# Data Validation
+pydantic>=2.11.0
+
+# Multipart Form Support
+python-multipart>=0.0.20
