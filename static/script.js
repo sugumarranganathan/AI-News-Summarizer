@@ -3,7 +3,9 @@
 // script.js
 // ======================================================
 
+// ======================================================
 // Elements
+// ======================================================
 
 const topic = document.getElementById("topic");
 const searchBtn = document.getElementById("searchBtn");
@@ -40,7 +42,7 @@ topic.addEventListener("keypress", function (e) {
 });
 
 // ======================================================
-// Search Function
+// Search News
 // ======================================================
 
 async function searchNews() {
@@ -57,13 +59,21 @@ async function searchNews() {
 
     loading.classList.remove("hidden");
 
-    news.innerHTML = "Searching latest news...";
-    summary.innerHTML = "Generating AI summary...";
-    translation.innerHTML = "Translating into Tamil...";
+    // Loading Messages
+
+    news.innerHTML = "🔎 Searching latest news...";
+
+    summary.innerHTML = "🤖 AI is generating summary...";
+
+    translation.innerHTML = "🌍 Translating into Tamil...";
 
     image.src = "https://placehold.co/1200x500?text=Loading...";
-    source.innerHTML = "Searching...";
+
+    source.innerHTML = "📰 Searching...";
+
     published.innerHTML = "";
+
+    articleLink.href = "#";
 
     try {
 
@@ -87,43 +97,51 @@ async function searchNews() {
 
         const data = await response.json();
 
-        news.innerHTML = data.news;
+        // ===========================================
+        // News
+        // ===========================================
 
-        summary.innerHTML = data.summary;
+        news.innerHTML = data.news || "No news found.";
 
-        translation.innerHTML = data.translation;
+        summary.innerHTML = data.summary || "";
 
-        // Image
+        translation.innerHTML = data.translation || "";
 
-        if (data.image && data.image !== "") {
+        // ===========================================
+        // News Image
+        // ===========================================
+
+        if (data.image) {
 
             image.src = data.image;
 
         }
 
+        else {
+
+            image.src = "https://placehold.co/1200x500?text=No+Image";
+
+        }
+
+        // ===========================================
         // Source
+        // ===========================================
 
-        if (data.source) {
+        source.innerHTML = `📰 ${data.source || "Unknown Source"}`;
 
-            source.innerHTML = "📰 " + data.source;
+        // ===========================================
+        // Published Date & Time
+        // ===========================================
 
-        }
+        published.innerHTML = `
+            📅 ${data.published_date || ""}<br>
+            🕒 ${data.published_time || ""}<br>
+            🟢 Published ${data.published_ago || ""}
+        `;
 
-        // Date
-
-        if (data.published) {
-
-            const date = new Date(data.published);
-
-            published.innerHTML =
-
-                "📅 " +
-
-                date.toLocaleString();
-
-        }
-
-        // Link
+        // ===========================================
+        // Article Link
+        // ===========================================
 
         if (data.url) {
 
@@ -131,30 +149,44 @@ async function searchNews() {
 
         }
 
+        else {
+
+            articleLink.href = "#";
+
+        }
+
     }
 
     catch (error) {
 
-        console.log(error);
+        console.error(error);
 
-        news.innerHTML = "Unable to fetch latest news.";
+        news.innerHTML = "❌ Unable to fetch latest news.";
 
         summary.innerHTML = "Please try again.";
 
         translation.innerHTML = "மீண்டும் முயற்சிக்கவும்.";
 
-        source.innerHTML = "Error";
+        image.src = "https://placehold.co/1200x500?text=Error";
+
+        source.innerHTML = "📰 Error";
 
         published.innerHTML = "";
 
+        articleLink.href = "#";
+
     }
 
-    loading.classList.add("hidden");
+    finally {
+
+        loading.classList.add("hidden");
+
+    }
 
 }
 
 // ======================================================
-// Copy Function
+// Copy Text
 // ======================================================
 
 function copyText(id) {
