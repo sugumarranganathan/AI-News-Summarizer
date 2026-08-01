@@ -10,12 +10,25 @@ import os
 import requests
 from dotenv import load_dotenv
 
+# ====================================================
+# Load Environment Variables
+# ====================================================
+
 load_dotenv()
 
 GNEWS_API_KEY = os.getenv("GNEWS_API_KEY")
 
 
+# ====================================================
+# Search Latest News
+# ====================================================
+
 def search_news(topic: str):
+
+    # Check API Key
+    if not GNEWS_API_KEY:
+        print("ERROR: GNEWS_API_KEY not found.")
+        return None
 
     try:
 
@@ -28,21 +41,32 @@ def search_news(topic: str):
             f"&apikey={GNEWS_API_KEY}"
         )
 
-        response = requests.get(url, timeout=15)
+        print("=" * 60)
+        print("Searching Topic :", topic)
+        print("Request URL :", url.replace(GNEWS_API_KEY, "********"))
+        print("=" * 60)
+
+        response = requests.get(url, timeout=20)
+
+        print("HTTP Status :", response.status_code)
 
         response.raise_for_status()
 
         data = response.json()
 
+        print("API Response :", data)
+
         articles = data.get("articles", [])
 
         if not articles:
+
+            print("No articles returned from GNews.")
 
             return None
 
         article = articles[0]
 
-        return {
+        result = {
 
             "title": article.get("title", ""),
 
@@ -60,8 +84,38 @@ def search_news(topic: str):
 
         }
 
+        print("=" * 60)
+        print("News Found Successfully")
+        print("Title :", result["title"])
+        print("=" * 60)
+
+        return result
+
+    except requests.exceptions.HTTPError as e:
+
+        print("HTTP Error :", e)
+
+        try:
+            print("Response :", response.text)
+        except:
+            pass
+
+        return None
+
+    except requests.exceptions.ConnectionError:
+
+        print("Connection Error")
+
+        return None
+
+    except requests.exceptions.Timeout:
+
+        print("Request Timeout")
+
+        return None
+
     except Exception as e:
 
-        print(f"GNews Error : {e}")
+        print("Unexpected Error :", str(e))
 
         return None
