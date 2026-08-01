@@ -49,15 +49,18 @@ def format_datetime(date_string):
 
         if diff.days > 0:
 
-            published_ago = f"{diff.days} day(s) ago"
+            days = diff.days
+            published_ago = f"{days} day{'s' if days != 1 else ''} ago"
 
         elif diff.seconds >= 3600:
 
-            published_ago = f"{diff.seconds // 3600} hour(s) ago"
+            hours = diff.seconds // 3600
+            published_ago = f"{hours} hour{'s' if hours != 1 else ''} ago"
 
         elif diff.seconds >= 60:
 
-            published_ago = f"{diff.seconds // 60} minute(s) ago"
+            minutes = diff.seconds // 60
+            published_ago = f"{minutes} minute{'s' if minutes != 1 else ''} ago"
 
         else:
 
@@ -90,7 +93,7 @@ def format_datetime(date_string):
 # Search Latest News
 # ====================================================
 
-def search_news(topic: str):
+def search_news(topic: str, page: int = 1):
 
     if not GNEWS_API_KEY:
 
@@ -106,13 +109,16 @@ def search_news(topic: str):
             "&lang=en"
             "&country=in"
             "&max=1"
+            f"&page={page}"
+            "&sortby=publishedAt"
             f"&apikey={GNEWS_API_KEY}"
         )
 
-        print("=" * 60)
+        print("=" * 70)
         print("Searching Topic :", topic)
-        print("Request URL :", url.replace(GNEWS_API_KEY, "********"))
-        print("=" * 60)
+        print("Page            :", page)
+        print("Request URL     :", url.replace(GNEWS_API_KEY, "********"))
+        print("=" * 70)
 
         response = requests.get(url, timeout=20)
 
@@ -124,17 +130,13 @@ def search_news(topic: str):
 
         articles = data.get("articles", [])
 
-        if not articles:
+        if len(articles) == 0:
 
-            print("No articles returned from GNews.")
+            print("No articles returned.")
 
             return None
 
         article = articles[0]
-
-        # ===========================================
-        # Format Published Date & Time
-        # ===========================================
 
         published = format_datetime(
             article.get("publishedAt", "")
@@ -162,13 +164,14 @@ def search_news(topic: str):
 
         }
 
-        print("=" * 60)
+        print("=" * 70)
         print("News Found Successfully")
         print("Title :", result["title"])
+        print("Source :", result["source"])
         print("Published :", result["published_date"])
         print("Time :", result["published_time"])
         print("Ago :", result["published_ago"])
-        print("=" * 60)
+        print("=" * 70)
 
         return result
 
@@ -177,8 +180,11 @@ def search_news(topic: str):
         print("HTTP Error :", e)
 
         try:
+
             print(response.text)
+
         except Exception:
+
             pass
 
         return None
