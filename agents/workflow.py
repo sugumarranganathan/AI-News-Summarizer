@@ -43,7 +43,11 @@ async def run_workflow(topic: str):
 
                 "source": "",
 
-                "published": ""
+                "published_date": "",
+
+                "published_time": "",
+
+                "published_ago": ""
 
             }
 
@@ -52,8 +56,7 @@ async def run_workflow(topic: str):
         # ===========================================
 
         news_text = f"""
-Title:
-{article.get('title', '')}
+📰 {article.get('title', '')}
 
 Description:
 {article.get('description', '')}
@@ -100,7 +103,11 @@ Content:
 
             "source": article.get("source", ""),
 
-            "published": article.get("published", "")
+            "published_date": article.get("published_date", ""),
+
+            "published_time": article.get("published_time", ""),
+
+            "published_ago": article.get("published_ago", "")
 
         }
 
@@ -120,7 +127,11 @@ Content:
 
             "source": "",
 
-            "published": "",
+            "published_date": "",
+
+            "published_time": "",
+
+            "published_ago": "",
 
             "error": str(e)
 
