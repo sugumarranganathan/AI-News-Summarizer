@@ -11,6 +11,111 @@
 
 ---
 
+# 🚨 Problem Statement
+
+In today's digital era, millions of news articles are published every day across different news platforms. Users often struggle to stay informed because reading complete news articles requires significant time and effort. Most traditional news applications simply display articles without helping users quickly understand the key information.
+
+Several challenges exist with conventional news platforms:
+
+- 📰 News articles are often long and time-consuming to read.
+- ⏳ Busy professionals and students have limited time to read complete articles.
+- 🌍 Many users prefer consuming news in their native language rather than English.
+- 📚 Information overload makes it difficult to identify the most important updates.
+- 🔍 Users need to visit multiple websites to search for relevant news.
+- 🤖 Traditional news applications do not provide AI-powered summaries or intelligent content processing.
+- ⚙️ Existing systems lack an automated workflow for searching, summarizing, and translating news.
+
+Therefore, there is a need for an intelligent AI-based solution that can automatically search the latest news, generate concise summaries, translate them into regional languages, and present all essential information through a single user-friendly interface.
+
+---
+
+# 💡 Proposed Solution
+
+The **AI News Summarizer & Tamil Translator** addresses these challenges by implementing a **Multi-Agent AI Architecture**. Instead of relying on a single AI model for all tasks, the application divides the workflow into specialized AI agents, each responsible for a specific task.
+
+The workflow operates as follows:
+
+1. **📰 News Search Agent**
+   - Searches the latest news using the GNews API.
+   - Retrieves the most relevant article along with its title, description, content, image, source, publication date, and article URL.
+
+2. **🤖 Summarizer Agent**
+   - Reads the complete news article.
+   - Generates a concise AI-powered summary highlighting the most important information.
+
+3. **🌍 Tamil Translator Agent**
+   - Translates the AI-generated summary into natural and professional Tamil.
+   - Preserves the meaning and readability of the original summary.
+
+4. **⚙️ Workflow Manager**
+   - Coordinates communication between all AI agents.
+   - Combines their outputs into a structured response.
+   - Sends the final result to the FastAPI backend.
+
+5. **🚀 FastAPI Backend**
+   - Processes the request.
+   - Returns the complete response to the web application.
+
+6. **💻 Modern Web Interface**
+   - Displays:
+     - 📰 Latest News
+     - 🖼️ News Image
+     - 📅 Published Date & Time
+     - 🏢 News Source
+     - 🤖 AI Summary
+     - 🌍 Tamil Translation
+     - 🔗 Original Article Link
+
+---
+
+# 🎯 Solution Benefits
+
+- ✅ Automatically searches the latest news.
+- ✅ Saves users significant reading time through AI-generated summaries.
+- ✅ Provides natural Tamil translations for regional users.
+- ✅ Uses a modular Multi-Agent architecture for better scalability and maintainability.
+- ✅ Presents all important news information in a single interface.
+- ✅ Reduces information overload by highlighting only the key points.
+- ✅ Demonstrates a practical real-world implementation of Agentic AI using AutoGen.
+
+---
+
+# 🔄 Multi-Agent Solution Workflow
+
+```text
+                👤 User
+                    │
+        Search News Topic
+                    │
+                    ▼
+      📰 News Search Agent
+      (Retrieve Latest News)
+                    │
+                    ▼
+      🤖 Summarizer Agent
+     (Generate AI Summary)
+                    │
+                    ▼
+   🌍 Tamil Translator Agent
+ (Translate Summary into Tamil)
+                    │
+                    ▼
+      ⚙️ Workflow Manager
+ (Combine Agent Responses)
+                    │
+                    ▼
+         🚀 FastAPI Backend
+                    │
+                    ▼
+         💻 Web Application
+```
+
+---
+
+## 🌟 Outcome
+
+The **AI News Summarizer & Tamil Translator** transforms traditional news reading into an intelligent AI-assisted experience by combining **news retrieval, AI summarization, and multilingual translation** within a **Multi-Agent architecture**. This enables users to understand important news quickly, efficiently, and in their preferred language while demonstrating the practical application of **Agentic AI** in a real-world scenario.
+
 # 📖 Overview
 
 AI News Summarizer & Tamil Translator is an intelligent **Multi-Agent AI application** that helps users understand the latest news in seconds.
