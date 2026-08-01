@@ -351,20 +351,7 @@ Example Response
 }
 
 
----
-
-# 🎯 Future Improvements
-
-- 🎤 Voice Assistant
-- 📄 PDF Export
-- 📧 Email Summary
-- ⭐ Favorite News
-- 🕒 Search History
-- 📈 Trending News
-- 🌐 Multi-language Support
-- 🔔 Daily AI News Digest
-
-
+----
 
 # 👨‍💻 Author
 
