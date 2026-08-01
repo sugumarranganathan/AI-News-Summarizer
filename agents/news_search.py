@@ -6,10 +6,9 @@ Purpose:
     Search latest news using GNews API.
 
 Features
----------
-✔ Search Intelligence
+--------
+✔ Google-like Search
 ✔ Query Normalization
-✔ Query Expansion
 ✔ Smart Keyword Mapping
 
 Author : Sugumar R
@@ -24,13 +23,15 @@ import os
 import re
 import requests
 
-from datetime import datetime
-from datetime import timedelta
-from datetime import timezone
+from dotenv import load_dotenv
+
+from datetime import (
+    datetime,
+    timedelta,
+    timezone,
+)
 
 from zoneinfo import ZoneInfo
-
-from dotenv import load_dotenv
 
 
 # ====================================================
@@ -50,38 +51,30 @@ if not GNEWS_API_KEY:
 
     raise ValueError(
 
-        "GNEWS_API_KEY not found in .env file."
+        "GNEWS_API_KEY not found in .env"
 
     )
 
 
 # ====================================================
-# Search Intelligence
+# Search Alias Dictionary
 # ====================================================
 
 SEARCH_ALIASES = {
 
-    # ----------------------------------------------
     # India
-    # ----------------------------------------------
 
     "india": "India",
 
     "bharat": "India",
 
-    # ----------------------------------------------
     # Tamil Nadu
-    # ----------------------------------------------
 
     "tamilnadu": "Tamil Nadu",
 
-    "tamil nadu": "Tamil Nadu",
-
     "tn": "Tamil Nadu",
 
-    # ----------------------------------------------
     # Cities
-    # ----------------------------------------------
 
     "madras": "Chennai",
 
@@ -91,9 +84,7 @@ SEARCH_ALIASES = {
 
     "calcutta": "Kolkata",
 
-    # ----------------------------------------------
     # Countries
-    # ----------------------------------------------
 
     "usa": "United States",
 
@@ -103,17 +94,13 @@ SEARCH_ALIASES = {
 
     "uae": "United Arab Emirates",
 
-    # ----------------------------------------------
     # Politics
-    # ----------------------------------------------
 
     "pm": "Prime Minister",
 
     "cm": "Chief Minister",
 
-    # ----------------------------------------------
     # Technology
-    # ----------------------------------------------
 
     "ai": "Artificial Intelligence",
 
@@ -151,11 +138,20 @@ REMOVE_WORDS = {
 # Normalize User Query
 # ====================================================
 
-def normalize_query(query: str):
+def normalize_query(query: str) -> str:
 
     """
-    Convert user query into
-    search-friendly format.
+    Normalize the user search query.
+
+    Example
+
+    Tamilnadu news
+            ↓
+    Tamil Nadu
+
+    AI latest news
+            ↓
+    Artificial Intelligence
     """
 
     if not query:
@@ -182,17 +178,15 @@ def normalize_query(query: str):
 
             continue
 
-        word = SEARCH_ALIASES.get(
-
-            word,
-
-            word
-
-        )
-
         words.append(
 
-            word
+            SEARCH_ALIASES.get(
+
+                word,
+
+                word
+
+            )
 
         )
 
@@ -204,229 +198,338 @@ def normalize_query(query: str):
 
     return query.strip()
 
-
-
-
 # ====================================================
 # Expand Search Query
 # ====================================================
 
-def expand_query(query: str):
+def expand_query(query: str) -> list:
 
     """
-    Google-like Search Intelligence
+    Expand user query into multiple
+    related search queries.
     """
 
     query = normalize_query(query)
 
-    queries = [query]
+    queries = [
+
+        query
+
+    ]
 
     lower = query.lower()
 
-    # =================================================
+    # ====================================================
     # Location
-    # =================================================
+    # ====================================================
 
     if "tamil nadu" in lower:
 
         queries.extend([
+
             "Tamil Nadu",
+
             "Chennai",
+
             "Tamil Nadu Politics",
+
             "Tamil Nadu Government",
-            "Tamil Nadu Latest"
+
+            "Tamil Nadu Latest",
+
         ])
 
     if "chennai" in lower:
 
         queries.extend([
+
             "Chennai",
+
             "Greater Chennai",
-            "Tamil Nadu"
+
+            "Tamil Nadu",
+
         ])
 
     if "india" in lower:
 
         queries.extend([
+
             "India",
+
             "India Politics",
+
             "India Economy",
-            "New Delhi"
+
+            "New Delhi",
+
         ])
 
     if "world" in lower:
 
         queries.extend([
+
             "World",
-            "International"
+
+            "International",
+
         ])
 
-    # =================================================
-    # Cinema
-    # =================================================
+    # ====================================================
+    # Entertainment
+    # ====================================================
 
     if any(word in lower for word in [
+
         "cinema",
+
         "movie",
+
         "film",
+
         "kollywood",
+
         "actor",
-        "actress"
+
+        "actress",
+
     ]):
 
         queries.extend([
+
             "Tamil Cinema",
+
             "Kollywood",
+
             "Tamil Movie",
+
             "Cinema",
-            "Film"
+
+            "Film",
+
         ])
 
-    # =================================================
+    # ====================================================
     # Politics
-    # =================================================
+    # ====================================================
 
     if any(word in lower for word in [
+
         "politics",
+
         "government",
-        "election",
+
+        "minister",
+
         "cm",
+
         "pm",
-        "minister"
+
+        "election",
+
     ]):
 
         queries.extend([
+
             "Politics",
+
             "Election",
-            "Government"
+
+            "Government",
+
         ])
 
-    # =================================================
-    # Cricket
-    # =================================================
-
-    if "cricket" in lower:
-
-        queries.extend([
-            "Cricket",
-            "India Cricket",
-            "ICC",
-            "IPL"
-        ])
-
-    # =================================================
+    # ====================================================
     # Sports
-    # =================================================
+    # ====================================================
 
-    if "sports" in lower:
+    if any(word in lower for word in [
+
+        "sports",
+
+        "cricket",
+
+        "football",
+
+        "tennis",
+
+        "ipl",
+
+    ]):
 
         queries.extend([
+
             "Sports",
+
             "Cricket",
-            "Football",
-            "Tennis",
-            "Olympics"
+
+            "India Cricket",
+
+            "IPL",
+
+            "ICC",
+
         ])
 
-    # =================================================
-    # Business
-    # =================================================
-
-    if any(word in lower for word in [
-        "business",
-        "economy",
-        "stock",
-        "share",
-        "market"
-    ]):
-
-        queries.extend([
-            "Business",
-            "Economy",
-            "Stock Market",
-            "Sensex",
-            "Nifty"
-        ])
-
-    # =================================================
+    # ====================================================
     # Technology
-    # =================================================
+    # ====================================================
 
     if any(word in lower for word in [
+
         "technology",
+
         "tech",
+
+        "artificial intelligence",
+
         "ai",
-        "artificial intelligence"
+
+        "openai",
+
+        "google",
+
     ]):
 
         queries.extend([
+
             "Technology",
+
             "Artificial Intelligence",
+
             "OpenAI",
+
             "Google AI",
-            "Microsoft AI"
+
+            "Microsoft AI",
+
         ])
 
-    # =================================================
+    # ====================================================
+    # Business
+    # ====================================================
+
+    if any(word in lower for word in [
+
+        "business",
+
+        "economy",
+
+        "market",
+
+        "stock",
+
+        "share",
+
+    ]):
+
+        queries.extend([
+
+            "Business",
+
+            "Economy",
+
+            "Stock Market",
+
+            "Sensex",
+
+            "Nifty",
+
+        ])
+
+    # ====================================================
     # Weather
-    # =================================================
+    # ====================================================
 
     if any(word in lower for word in [
+
         "weather",
+
         "rain",
+
         "cyclone",
-        "storm"
+
+        "storm",
+
+        "flood",
+
     ]):
 
         queries.extend([
+
             "Weather",
+
             "Rain",
+
             "Cyclone",
-            "IMD"
+
+            "IMD",
+
         ])
 
-    # =================================================
+    # ====================================================
     # Health
-    # =================================================
+    # ====================================================
 
     if any(word in lower for word in [
+
         "health",
-        "hospital",
+
         "medical",
+
+        "hospital",
+
         "covid",
-        "diabetes"
+
+        "diabetes",
+
     ]):
 
         queries.extend([
+
             "Health",
+
             "Medical",
-            "Hospital"
+
+            "Hospital",
+
         ])
 
-    # =================================================
+    # ====================================================
     # Education
-    # =================================================
+    # ====================================================
 
     if any(word in lower for word in [
+
         "education",
+
         "school",
+
         "college",
+
         "university",
-        "exam"
+
+        "exam",
+
     ]):
 
         queries.extend([
+
             "Education",
+
             "School",
+
             "College",
-            "University"
+
+            "University",
+
         ])
 
-    # =================================================
-    # Remove duplicates
-    # =================================================
+    # ====================================================
+    # Remove Duplicates
+    # ====================================================
 
-    unique = []
+    unique_queries = []
 
     seen = set()
 
@@ -446,9 +549,10 @@ def expand_query(query: str):
 
         seen.add(key)
 
-        unique.append(item)
+        unique_queries.append(item)
 
-    return unique
+    return unique_queries
+
 # ====================================================
 # Format Date & Time
 # ====================================================
@@ -456,8 +560,7 @@ def expand_query(query: str):
 def format_datetime(date_string: str):
 
     """
-    Convert UTC time into IST
-    and calculate relative time.
+    Convert UTC to IST
     """
 
     try:
@@ -510,33 +613,23 @@ def format_datetime(date_string: str):
 
         if diff.days > 0:
 
-            value = diff.days
-
-            unit = "day"
+            ago = f"{diff.days} day{'s' if diff.days > 1 else ''} ago"
 
         elif diff.seconds >= 3600:
 
-            value = diff.seconds // 3600
+            hours = diff.seconds // 3600
 
-            unit = "hour"
+            ago = f"{hours} hour{'s' if hours > 1 else ''} ago"
 
         elif diff.seconds >= 60:
 
-            value = diff.seconds // 60
+            minutes = diff.seconds // 60
 
-            unit = "minute"
+            ago = f"{minutes} minute{'s' if minutes > 1 else ''} ago"
 
         else:
 
-            return {
-
-                "date": published_date,
-
-                "time": published_time,
-
-                "ago": "Just now"
-
-            }
+            ago = "Just now"
 
         return {
 
@@ -544,7 +637,7 @@ def format_datetime(date_string: str):
 
             "time": published_time,
 
-            "ago": f"{value} {unit}{'' if value == 1 else 's'} ago"
+            "ago": ago
 
         }
 
@@ -610,6 +703,10 @@ def fetch_articles(
 
 ):
 
+    """
+    Search GNews API
+    """
+
     from_date = (
 
         datetime.now(
@@ -646,8 +743,6 @@ def fetch_articles(
 
     print("Page :", page)
 
-    print("From :", from_date)
-
     print(
 
         "URL :",
@@ -671,14 +766,6 @@ def fetch_articles(
             url,
 
             timeout=20
-
-        )
-
-        print(
-
-            "HTTP Status :",
-
-            response.status_code
 
         )
 
@@ -753,81 +840,36 @@ def fetch_articles(
         return []
 
 # ====================================================
-# Search Articles
-# ====================================================
-
-def search_articles(
-
-    topic: str,
-
-    page: int = 1
-
-):
-
-    """
-    Search multiple related queries
-    and return unique latest articles.
-    """
-
-    queries = expand_query(
-
-        topic
-
-    )
-
-    print("=" * 70)
-
-    print("Original Search :", topic)
-
-    print("Expanded Queries")
-
-    for query in queries:
-
-        print("•", query)
-
-    print("=" * 70)
-
-    all_articles = []
-
-    for query in queries:
-
-        articles = fetch_articles(
-
-            query,
-
-            page
-
-        )
-
-        if articles:
-
-            all_articles.extend(
-
-                articles
-
-            )
-
-    if not all_articles:
-
-        print("No articles found.")
-
-        return []
-
-    # ====================================================
 # Calculate Relevance Score
 # ====================================================
 
-def calculate_score(article, query):
+def calculate_score(article, query: str):
+
+    """
+    Calculate relevance score.
+    Higher score = Better match.
+    """
 
     score = 0
 
-    title = article.get("title", "").lower()
+    title = article.get(
+        "title",
+        ""
+    ).lower()
 
-    description = article.get("description", "").lower()
+    description = article.get(
+        "description",
+        ""
+    ).lower()
 
-    content = article.get("content", "").lower()
+    content = article.get(
+        "content",
+        ""
+    ).lower()
 
-    query_words = query.lower().split()
+    query_words = normalize_query(
+        query
+    ).lower().split()
 
     for word in query_words:
 
@@ -845,18 +887,69 @@ def calculate_score(article, query):
 
     return score
 
-    # ----------------------------------------
+
+# ====================================================
+# Search Articles
+# ====================================================
+
+def search_articles(
+    topic: str,
+    page: int = 1
+):
+
+    """
+    Search all expanded queries.
+    """
+
+    queries = expand_query(topic)
+
+    print("=" * 70)
+    print("Original Search :", topic)
+    print("=" * 70)
+
+    print("Expanded Queries")
+
+    for q in queries:
+
+        print("•", q)
+
+    print("=" * 70)
+
+    all_articles = []
+
+    # ------------------------------------------
+    # Search Every Query
+    # ------------------------------------------
+
+    for q in queries:
+
+        articles = fetch_articles(
+            q,
+            page
+        )
+
+        if articles:
+
+            all_articles.extend(
+                articles
+            )
+
+    if not all_articles:
+
+        print("No articles found.")
+
+        return []
+
+    # ------------------------------------------
     # Remove Duplicate Articles
-    # ----------------------------------------
+    # ------------------------------------------
 
     unique_articles = {}
 
     for article in all_articles:
 
         url = article.get(
-
             "url"
-
         )
 
         if url:
@@ -864,24 +957,34 @@ def calculate_score(article, query):
             unique_articles[url] = article
 
     articles = list(
-
         unique_articles.values()
-
     )
 
-    # ----------------------------------------
-    # Sort Latest First
-    # ----------------------------------------
+    # ------------------------------------------
+    # Calculate Relevance
+    # ------------------------------------------
+
+    for article in articles:
+
+        article["score"] = calculate_score(
+            article,
+            topic
+        )
+
+    # ------------------------------------------
+    # Sort
+    # ------------------------------------------
 
     articles.sort(
 
-        key=lambda article:
+        key=lambda x: (
 
-        article.get(
+            x["score"],
 
-            "publishedAt",
-
-            ""
+            x.get(
+                "publishedAt",
+                ""
+            )
 
         ),
 
@@ -892,150 +995,26 @@ def calculate_score(article, query):
     print("=" * 70)
 
     print(
+        "Unique Articles :",
+        len(articles)
+    )
 
-        "Total Articles :",
+    if articles:
 
-        len(
-
-            articles
-
+        print(
+            "Best Score :",
+            articles[0]["score"]
         )
 
-    )
+        print(
+            "Best Match :",
+            articles[0].get(
+                "title",
+                ""
+            )
+        )
 
     print("=" * 70)
 
     return articles
-
-# ====================================================
-# Search News
-# ====================================================
-
-def search_news(
-    topic: str,
-    page: int = 1
-):
-
-    """
-    Return the latest news article.
-    """
-
-    articles = search_articles(
-        topic,
-        page
-    )
-
-    if not articles:
-
-        return None
-
-    for article in articles:
-
-    article["score"] = calculate_score(
-
-        article,
-
-        topic
-
-    )
-
-articles.sort(
-
-    key=lambda article: (
-
-        article["score"],
-
-        article.get(
-
-            "publishedAt",
-
-            ""
-
-        )
-
-    ),
-
-    reverse=True
-
-)
-
-article = articles[0]
-
-    published = format_datetime(
-
-        article.get(
-
-            "publishedAt",
-
-            ""
-
-        )
-
-    )
-
-    result = {
-
-        "title": article.get(
-
-            "title",
-
-            ""
-
-        ),
-
-        "description": article.get(
-
-            "description",
-
-            ""
-
-        ),
-
-        "content": article.get(
-
-            "content",
-
-            ""
-
-        ),
-
-        "url": article.get(
-
-            "url",
-
-            ""
-
-        ),
-
-        "image": article.get(
-
-            "image"
-
-        ) or "https://placehold.co/1200x500?text=No+Image",
-
-        "source": article.get(
-
-            "source",
-
-            {}
-
-        ).get(
-
-            "name",
-
-            "Unknown"
-
-        ),
-
-        "published_date": published["date"],
-
-        "published_time": published["time"],
-
-        "published_ago": published["ago"]
-
-    }
-
-    return result
-
-
 
