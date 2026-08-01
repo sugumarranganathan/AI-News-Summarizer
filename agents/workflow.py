@@ -17,7 +17,11 @@ from agents.summarizer import summarizer
 from agents.translator import translator
 
 
-async def run_workflow(topic: str):
+# ====================================================
+# Multi-Agent Workflow
+# ====================================================
+
+async def run_workflow(topic: str, page: int = 1):
 
     try:
 
@@ -25,17 +29,17 @@ async def run_workflow(topic: str):
         # Step 1 : Search News
         # ===========================================
 
-        article = search_news(topic)
+        article = search_news(topic, page)
 
         if not article:
 
             return {
 
-                "news": "❌ No news found.",
+                "news": "❌ No news found for this topic.",
 
                 "summary": "No summary available.",
 
-                "translation": "செய்தி கிடைக்கவில்லை.",
+                "translation": "இந்த தலைப்பிற்கு செய்தி கிடைக்கவில்லை.",
 
                 "image": "",
 
@@ -47,12 +51,14 @@ async def run_workflow(topic: str):
 
                 "published_time": "",
 
-                "published_ago": ""
+                "published_ago": "",
+
+                "page": page
 
             }
 
         # ===========================================
-        # News Display (Professional Format)
+        # Professional News Display
         # ===========================================
 
         news_text = f"""
@@ -64,7 +70,7 @@ async def run_workflow(topic: str):
 """
 
         # ===========================================
-        # Text for AI Summarizer
+        # AI Input
         # ===========================================
 
         ai_input = f"""
@@ -79,7 +85,7 @@ Content:
 """
 
         # ===========================================
-        # Step 2 : AI Summary
+        # Step 2 : AI Summarizer
         # ===========================================
 
         summary_result = await summarizer.run(
@@ -89,7 +95,7 @@ Content:
         summary = summary_result.messages[-1].content
 
         # ===========================================
-        # Step 3 : Tamil Translation
+        # Step 3 : Tamil Translator
         # ===========================================
 
         tamil_result = await translator.run(
@@ -120,13 +126,18 @@ Content:
 
             "published_time": article.get("published_time", ""),
 
-            "published_ago": article.get("published_ago", "")
+            "published_ago": article.get("published_ago", ""),
+
+            "page": page
 
         }
 
     except Exception as e:
 
-        print("Workflow Error :", str(e))
+        print("=" * 60)
+        print("Workflow Error")
+        print(str(e))
+        print("=" * 60)
 
         return {
 
@@ -147,6 +158,8 @@ Content:
             "published_time": "",
 
             "published_ago": "",
+
+            "page": page,
 
             "error": str(e)
 
