@@ -813,6 +813,38 @@ def search_articles(
 
         return []
 
+    # ====================================================
+# Calculate Relevance Score
+# ====================================================
+
+def calculate_score(article, query):
+
+    score = 0
+
+    title = article.get("title", "").lower()
+
+    description = article.get("description", "").lower()
+
+    content = article.get("content", "").lower()
+
+    query_words = query.lower().split()
+
+    for word in query_words:
+
+        if word in title:
+
+            score += 20
+
+        if word in description:
+
+            score += 10
+
+        if word in content:
+
+            score += 5
+
+    return score
+
     # ----------------------------------------
     # Remove Duplicate Articles
     # ----------------------------------------
@@ -897,7 +929,37 @@ def search_news(
 
         return None
 
-    article = articles[0]
+    for article in articles:
+
+    article["score"] = calculate_score(
+
+        article,
+
+        topic
+
+    )
+
+articles.sort(
+
+    key=lambda article: (
+
+        article["score"],
+
+        article.get(
+
+            "publishedAt",
+
+            ""
+
+        )
+
+    ),
+
+    reverse=True
+
+)
+
+article = articles[0]
 
     published = format_datetime(
 
