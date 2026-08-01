@@ -1,7 +1,8 @@
-/* ===========================================
-   AI News Summarizer
-   Author : Sugumar R
-=========================================== */
+/* ===========================================================
+   AI NEWS SUMMARIZER
+   Professional UI
+   Part 1
+=========================================================== */
 
 *{
     margin:0;
@@ -9,96 +10,390 @@
     box-sizing:border-box;
 }
 
+html{
+    scroll-behavior:smooth;
+}
+
 body{
 
     font-family:'Poppins',sans-serif;
 
-    background:linear-gradient(
-        135deg,
-        #1e3c72,
-        #2a5298,
-        #4facfe
-    );
-
     min-height:100vh;
 
-    padding:40px;
+    background:linear-gradient(
+        135deg,
+        #0f172a 0%,
+        #1e3a8a 35%,
+        #2563eb 70%,
+        #38bdf8 100%
+    );
+
+    background-size:400% 400%;
+
+    animation:gradientMove 12s ease infinite;
+
+    color:#ffffff;
 
 }
 
-/* ========================= */
+/* ===================================== */
+
+@keyframes gradientMove{
+
+    0%{
+        background-position:0% 50%;
+    }
+
+    50%{
+        background-position:100% 50%;
+    }
+
+    100%{
+        background-position:0% 50%;
+    }
+
+}
+
+/* ===================================== */
 
 .container{
 
-    max-width:1100px;
+    width:95%;
+
+    max-width:1250px;
 
     margin:auto;
 
-}
-
-/* ========================= */
-
-header{
-
-    text-align:center;
-
-    margin-bottom:35px;
-
-    color:white;
+    padding:30px;
 
 }
 
-header h1{
+/* ===================================== */
+/* NAVBAR */
+/* ===================================== */
 
-    font-size:42px;
-
-    margin-bottom:10px;
-
-}
-
-header p{
-
-    font-size:18px;
-
-    opacity:.9;
-
-}
-
-/* ========================= */
-
-.search-section{
+nav{
 
     display:flex;
 
-    gap:15px;
+    justify-content:space-between;
 
-    margin-bottom:30px;
+    align-items:center;
+
+    margin-bottom:50px;
 
 }
 
-/* ========================= */
+/* ===================================== */
 
-input{
+.logo{
 
-    flex:1;
+    font-size:32px;
 
-    padding:18px;
+    font-weight:700;
+
+    letter-spacing:1px;
+
+}
+
+/* ===================================== */
+
+.theme-btn{
+
+    width:55px;
+
+    height:55px;
 
     border:none;
 
-    border-radius:12px;
+    border-radius:50%;
 
-    font-size:18px;
+    cursor:pointer;
 
-    outline:none;
+    font-size:22px;
+
+    color:#2563eb;
+
+    background:white;
+
+    transition:.3s;
+
+    box-shadow:
+
+        0 8px 25px rgba(0,0,0,.25);
 
 }
 
-/* ========================= */
+/* ===================================== */
 
-button{
+.theme-btn:hover{
 
-    padding:18px 28px;
+    transform:scale(1.08);
+
+}
+
+/* ===================================== */
+/* HERO */
+/* ===================================== */
+
+.hero{
+
+    text-align:center;
+
+    margin-bottom:60px;
+
+}
+
+/* ===================================== */
+
+.hero h1{
+
+    font-size:54px;
+
+    font-weight:700;
+
+    margin-bottom:20px;
+
+    text-shadow:
+
+        0 10px 20px rgba(0,0,0,.25);
+
+}
+
+/* ===================================== */
+
+.hero p{
+
+    font-size:20px;
+
+    opacity:.95;
+
+    line-height:1.8;
+
+}
+
+/* ===================================== */
+/* SEARCH SECTION */
+/* ===================================== */
+
+.search-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+    margin-bottom:40px;
+
+}
+
+/* ===================================== */
+
+.search-box input{
+
+    flex:1;
+
+    padding:20px;
+
+    border:none;
+
+    border-radius:15px;
+
+    outline:none;
+
+    font-size:18px;
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(15px);
+
+    color:white;
+
+    border:1px solid rgba(255,255,255,.25);
+
+}
+
+/* ===================================== */
+
+.search-box input::placeholder{
+
+    color:#f1f5f9;
+
+}
+
+/* ===========================================================
+   PART 2
+   Search Button + Cards
+=========================================================== */
+
+/* ===================================== */
+/* SEARCH BUTTON */
+/* ===================================== */
+
+.search-box button{
+
+    padding:20px 35px;
+
+    border:none;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    color:white;
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    transition:.35s;
+
+    box-shadow:
+
+        0 10px 25px rgba(37,99,235,.35);
+
+}
+
+/* ===================================== */
+
+.search-box button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+        0 18px 35px rgba(37,99,235,.45);
+
+}
+
+/* ===================================== */
+
+.search-box button:active{
+
+    transform:scale(.96);
+
+}
+
+/* ===================================== */
+/* GRID */
+/* ===================================== */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:1fr;
+
+    gap:30px;
+
+}
+
+/* ===================================== */
+/* CARD */
+/* ===================================== */
+
+.card{
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(255,255,255,.25);
+
+    box-shadow:
+
+        0 15px 35px rgba(0,0,0,.18);
+
+    transition:.35s;
+
+}
+
+/* ===================================== */
+
+.card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:
+
+        0 25px 45px rgba(0,0,0,.25);
+
+}
+
+/* ===================================== */
+/* CARD HEADER */
+/* ===================================== */
+
+.card-title{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px 25px;
+
+    background:rgba(255,255,255,.12);
+
+    color:white;
+
+    font-size:22px;
+
+    font-weight:600;
+
+}
+
+/* ===================================== */
+/* CARD BODY */
+/* ===================================== */
+
+.card-body{
+
+    background:white;
+
+    color:#1f2937;
+
+    padding:28px;
+
+    min-height:220px;
+
+    font-size:17px;
+
+    line-height:1.9;
+
+    white-space:pre-wrap;
+
+}
+
+/* ===================================== */
+
+.tamil{
+
+    font-size:20px;
+
+}
+
+/* ===================================== */
+/* COPY BUTTON */
+/* ===================================== */
+
+.copyBtn{
+
+    width:42px;
+
+    height:42px;
 
     border:none;
 
@@ -108,95 +403,82 @@ button{
 
     font-size:18px;
 
-    background:#2563eb;
+    background:white;
 
-    color:white;
+    color:#2563eb;
 
     transition:.3s;
 
 }
 
-button:hover{
+/* ===================================== */
 
-    background:#1d4ed8;
+.copyBtn:hover{
 
-    transform:translateY(-2px);
-
-}
-
-/* ========================= */
-
-.card{
-
-    background:rgba(255,255,255,.15);
-
-    backdrop-filter:blur(12px);
-
-    border-radius:18px;
-
-    margin-bottom:25px;
-
-    overflow:hidden;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.15);
-
-}
-
-/* ========================= */
-
-.card-header{
-
-    background:rgba(255,255,255,.25);
+    background:#2563eb;
 
     color:white;
 
-    padding:18px;
-
-    font-size:22px;
-
-    font-weight:600;
+    transform:scale(1.08);
 
 }
 
-/* ========================= */
+/* ===================================== */
 
-.card-body{
+.copyBtn:active{
 
-    padding:25px;
-
-    background:white;
-
-    line-height:1.8;
-
-    font-size:17px;
-
-    min-height:160px;
-
-    white-space:pre-wrap;
+    transform:scale(.95);
 
 }
 
-/* ========================= */
+/* ===================================== */
+/* CARD ANIMATION */
+/* ===================================== */
 
-.tamil{
+.card{
 
-    font-size:20px;
+    animation:fadeUp .8s ease;
 
 }
 
-/* ========================= */
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(35px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ===========================================================
+   PART 3
+   Loading + Dark Mode + Footer + Responsive
+=========================================================== */
+
+/* ===================================== */
+/* LOADING */
+/* ===================================== */
 
 .loading{
 
     text-align:center;
 
-    margin-bottom:25px;
+    margin:40px 0;
 
     color:white;
 
 }
-
-/* ========================= */
 
 .hidden{
 
@@ -204,19 +486,19 @@ button:hover{
 
 }
 
-/* ========================= */
+/* ===================================== */
 
 .loader{
 
-    width:50px;
+    width:70px;
 
-    height:50px;
+    height:70px;
 
     margin:auto;
 
-    border:6px solid white;
+    border:7px solid rgba(255,255,255,.25);
 
-    border-top:6px solid transparent;
+    border-top:7px solid white;
 
     border-radius:50%;
 
@@ -224,7 +506,19 @@ button:hover{
 
 }
 
-/* ========================= */
+/* ===================================== */
+
+.loading p{
+
+    margin-top:18px;
+
+    font-size:18px;
+
+    font-weight:500;
+
+}
+
+/* ===================================== */
 
 @keyframes spin{
 
@@ -242,40 +536,301 @@ button:hover{
 
 }
 
-/* ========================= */
+/* ===================================== */
+/* FOOTER */
+/* ===================================== */
 
 footer{
+
+    margin-top:60px;
+
+    padding:30px;
 
     text-align:center;
 
     color:white;
 
-    margin-top:40px;
+    font-size:17px;
 
-    opacity:.8;
+    opacity:.9;
 
 }
 
-/* ========================= */
+footer strong{
+
+    color:#facc15;
+
+}
+
+/* ===================================== */
+/* DARK MODE */
+/* ===================================== */
+
+.dark{
+
+    background:#020617;
+
+    animation:none;
+
+}
+
+.dark .card{
+
+    background:rgba(15,23,42,.75);
+
+}
+
+.dark .card-title{
+
+    background:#0f172a;
+
+}
+
+.dark .card-body{
+
+    background:#111827;
+
+    color:#f9fafb;
+
+}
+
+.dark input{
+
+    background:#111827;
+
+    color:white;
+
+    border:1px solid #374151;
+
+}
+
+.dark input::placeholder{
+
+    color:#d1d5db;
+
+}
+
+.dark .theme-btn{
+
+    background:#1e293b;
+
+    color:#facc15;
+
+}
+
+.dark .copyBtn{
+
+    background:#1e293b;
+
+    color:white;
+
+}
+
+.dark .copyBtn:hover{
+
+    background:#2563eb;
+
+}
+
+/* ===================================== */
+/* SCROLLBAR */
+/* ===================================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#dbeafe;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#2563eb;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#1d4ed8;
+
+}
+
+/* ===================================== */
+/* SELECTION */
+/* ===================================== */
+
+::selection{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+/* ===================================== */
+/* CARD BODY PARAGRAPHS */
+/* ===================================== */
+
+.card-body p{
+
+    margin-bottom:15px;
+
+}
+
+.card-body ul{
+
+    margin-left:20px;
+
+}
+
+.card-body li{
+
+    margin-bottom:10px;
+
+}
+
+/* ===================================== */
+/* RESPONSIVE */
+/* ===================================== */
+
+@media(max-width:992px){
+
+.hero h1{
+
+    font-size:42px;
+
+}
+
+.hero p{
+
+    font-size:18px;
+
+}
+
+}
+
+/* ===================================== */
 
 @media(max-width:768px){
 
-.search-section{
+.container{
+
+    width:96%;
+
+    padding:15px;
+
+}
+
+nav{
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.logo{
+
+    font-size:28px;
+
+}
+
+.hero{
+
+    margin-bottom:40px;
+
+}
+
+.hero h1{
+
+    font-size:34px;
+
+}
+
+.hero p{
+
+    font-size:16px;
+
+}
+
+.search-box{
 
     flex-direction:column;
 
 }
 
-button{
+.search-box input{
 
     width:100%;
 
 }
 
-header h1{
+.search-box button{
 
-    font-size:30px;
+    width:100%;
+
+}
+
+.card-title{
+
+    font-size:18px;
+
+}
+
+.card-body{
+
+    padding:20px;
+
+    font-size:16px;
+
+}
+
+.tamil{
+
+    font-size:18px;
 
 }
 
 }
+
+/* ===================================== */
+
+@media(max-width:480px){
+
+.hero h1{
+
+    font-size:28px;
+
+}
+
+.logo{
+
+    font-size:24px;
+
+}
+
+.card-body{
+
+    min-height:180px;
+
+}
+
+footer{
+
+    font-size:15px;
+
+}
+
+}
+
+/* ===================================== */
+/* END */
+/* ===================================== */
+
