@@ -816,3 +816,105 @@ def search_articles(
 
     return articles
 
+# ====================================================
+# Search News
+# ====================================================
+
+def search_news(
+    topic: str,
+    page: int = 1
+):
+
+    """
+    Return the latest news article.
+    """
+
+    articles = search_articles(
+        topic,
+        page
+    )
+
+    if not articles:
+
+        return None
+
+    article = articles[0]
+
+    published = format_datetime(
+
+        article.get(
+
+            "publishedAt",
+
+            ""
+
+        )
+
+    )
+
+    result = {
+
+        "title": article.get(
+
+            "title",
+
+            ""
+
+        ),
+
+        "description": article.get(
+
+            "description",
+
+            ""
+
+        ),
+
+        "content": article.get(
+
+            "content",
+
+            ""
+
+        ),
+
+        "url": article.get(
+
+            "url",
+
+            ""
+
+        ),
+
+        "image": article.get(
+
+            "image"
+
+        ) or "https://placehold.co/1200x500?text=No+Image",
+
+        "source": article.get(
+
+            "source",
+
+            {}
+
+        ).get(
+
+            "name",
+
+            "Unknown"
+
+        ),
+
+        "published_date": published["date"],
+
+        "published_time": published["time"],
+
+        "published_ago": published["ago"]
+
+    }
+
+    return result
+
+
+
