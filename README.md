@@ -1,5 +1,7 @@
 # 🤖 AI News Summarizer & Tamil Translator
 
+https://ai-news-summarizer-cqzh.onrender.com/
+
 > **A Multi-Agent AI application that searches the latest news, generates AI-powered summaries, and translates them into natural Tamil using AutoGen, Groq, FastAPI, and GNews API.**
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
